@@ -11,7 +11,7 @@ import math
 import random
 
 from vesper.engine.ecs import World
-from vesper.engine.physics import Body, Transform
+from vesper.engine.physics import Transform
 from vesper.engine.render import Animator, Sprite
 
 from . import art

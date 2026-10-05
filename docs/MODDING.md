@@ -39,7 +39,7 @@ def register(registry):
         speed=620, cooldown=0.3, shots=3, spread=0.3))
 ```
 
-The `projectile` field picks a sprite from `vesper/game/art.py`
+The `projectile` field picks a sprite from `vesper/game/art/`
 (`projectile_surface`).
 
 ## Add an enemy

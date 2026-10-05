@@ -73,12 +73,3 @@ class SaveManager:
                 return SaveData.from_json(fh.read())
         except (OSError, ValueError):
             return None
-
-    def delete(self, slot: int = 0) -> None:
-        try:
-            os.remove(self.path_for(slot))
-        except OSError:
-            pass
-
-    def list_slots(self, count: int = 3) -> list:
-        return [self.load(i) for i in range(count)]

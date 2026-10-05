@@ -25,21 +25,11 @@ T_ROCK_FG = 8         # foreground silhouette
 T_ONEWAY = 9          # one-way platform
 T_VINE = 10           # decorative background
 T_GRATE = 11          # background grate (walk-through)
-T_HAZARD_ICE = 12     # slippery ice
 T_BOSS_ARMOR = 13     # unbreakable boss arena plating
 T_SURFACE = 14        # brown surface rock
 T_RUIN = 15           # pale alien ruin stone
 T_MOSS = 16           # decorative moss (background)
 T_SURFACE_TOP = 17    # surface rock with a mossy top edge
-
-# -- palette ----------------------------------------------------------------
-C_BG_TOP = (10, 12, 22)
-C_BG_BOTTOM = (22, 16, 30)
-C_UI = (215, 240, 255)
-C_UI_DIM = (120, 140, 170)
-C_ACCENT = (90, 240, 255)
-C_WARN = (255, 120, 90)
-C_GOLD = (255, 216, 120)
 
 ZONE_COLORS: Dict[str, Tuple[Tuple[int, int, int], Tuple[int, int, int]]] = {
     "surface": ((8, 10, 24), (36, 30, 48)),
@@ -92,8 +82,6 @@ MORPH_SPEED = 150.0
 
 PLAYER_W = 14
 PLAYER_H = 22
-MORPH_W = 14
-MORPH_H = 14
 
 # -- combat -----------------------------------------------------------------
 BASE_HEALTH = 99
@@ -110,6 +98,3 @@ CORE_GOAL = 2   # cores needed to open the final gate
 #: When True the world contains only the Nara Surface (no underground yet).
 #: Flip to False to re-enable the caverns, boss and full progression.
 SURFACE_ONLY = True
-
-#: names of the abilities the heroine can acquire
-ABILITY_ORDER = ["missile", "charge", "morph", "grav_boots", "dash", "wall_grip", "super_missile"]

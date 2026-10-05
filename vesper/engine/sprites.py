@@ -25,27 +25,6 @@ def tint(surface: pygame.Surface, color: Color, amount: float = 0.5) -> pygame.S
     return out
 
 
-def outline(surface: pygame.Surface, color: Color = (10, 10, 18)) -> pygame.Surface:
-    mask = pygame.mask.from_surface(surface)
-    sil = mask.to_surface(setcolor=(*color, 255), unsetcolor=(0, 0, 0, 0))
-    out = pygame.Surface(surface.get_size(), pygame.SRCALPHA)
-    for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)):
-        out.blit(sil, (dx, dy))
-    out.blit(surface, (0, 0))
-    return out
-
-
-def horizontal_gradient(w: int, h: int, left: Color, right: Color) -> pygame.Surface:
-    surf = pygame.Surface((w, h))
-    for x in range(w):
-        t = x / max(1, w - 1)
-        color = (int(left[0] + (right[0] - left[0]) * t),
-                 int(left[1] + (right[1] - left[1]) * t),
-                 int(left[2] + (right[2] - left[2]) * t))
-        pygame.draw.line(surf, color, (x, 0), (x, h))
-    return surf
-
-
 def vertical_gradient(w: int, h: int, top: Color, bottom: Color) -> pygame.Surface:
     surf = pygame.Surface((w, h))
     for y in range(h):
@@ -73,15 +52,3 @@ def glow(radius: int, color: Color, alpha: int = 180) -> pygame.Surface:
         a = int(alpha * (1 - r / radius) ** 1.6)
         pygame.draw.circle(surf, (*color, a), (radius, radius), r)
     return surf
-
-
-def render_outline_text(font: pygame.font.Font, text: str, color: Color,
-                        outline_color: Color) -> pygame.Surface:
-    base = font.render(text, True, color)
-    out = pygame.Surface((base.get_width() + 2, base.get_height() + 2), pygame.SRCALPHA)
-    shadow = font.render(text, True, outline_color)
-    for dx in (-1, 0, 1):
-        for dy in (-1, 0, 1):
-            out.blit(shadow, (dx + 1, dy + 1))
-    out.blit(base, (1, 1))
-    return out

@@ -140,9 +140,6 @@ class World:
             return ent
         return None
 
-    def by_tag(self, tag: str) -> List[Entity]:
-        return [e for e in self.entities.values() if e.alive and tag in e.tags]
-
     # -- systems ----------------------------------------------------------
     def add_system(self, system: System) -> System:
         self.systems.append(system)
@@ -161,8 +158,6 @@ class World:
         for system in self.systems:
             system.update(self, dt)
         self.flush()
-        if self.events is not None:
-            self.events.flush()
 
     def draw(self, surface, camera) -> None:
         for system in self.systems:

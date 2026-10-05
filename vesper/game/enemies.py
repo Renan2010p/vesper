@@ -8,17 +8,14 @@ an art function, an ``EnemyDef`` and (optionally) a new behaviour here.
 from __future__ import annotations
 
 import math
-import random
-from typing import Dict
 
-import pygame
 
 from vesper.engine.ecs import World
 from vesper.engine.physics import Body, Transform
-from vesper.engine.render import Animator, Sprite
+from vesper.engine.render import Sprite
 
 from . import art
-from .components import AI, Floating, Health
+from .components import AI
 from .prefabs import EnemyDef, spawn_projectile
 
 # ---------------------------------------------------------------------------

@@ -2,26 +2,24 @@
 
 from __future__ import annotations
 
-from typing import Dict, Optional
+from typing import Optional
 
 import pygame
 
 from vesper.engine.ecs import World
 from vesper.engine.physics import Body, CollisionService, PhysicsSystem, Transform
 from vesper.engine.platform import EventType, Key
-from vesper.engine.render import Animator, AnimatorSystem, Sprite, SpriteDrawSystem
+from vesper.engine.render import AnimatorSystem, SpriteDrawSystem
 from vesper.engine.scene import Scene
 from vesper.engine.save import SaveData
 
 from .. import art
-from ..components import Door, Forms, Gate, Health, Loadout, Player
+from ..components import Door, Gate, Health, Loadout
 from ..config import GRAVITY, TILE, ZONE_COLORS
-from ..hud import HUD, draw_ascii_map
+from ..hud import HUD
 from ..i18n import t
 from ..level import Zone, build_tileset
-from ..prefabs import (spawn_decoration, spawn_door, spawn_enemy, spawn_gate,
-                       spawn_pickup, spawn_player, spawn_save_station,
-                       spawn_ship, spawn_spawner)
+from ..prefabs import spawn_decoration, spawn_door, spawn_enemy, spawn_pickup, spawn_player, spawn_save_station, spawn_ship
 from ..roomworld import build_room, build_room_graph
 from ..rooms import START_ROOM
 from ..systems import (AISystem, CameraSystem, DeathSystem, DoorSystem,
@@ -355,57 +353,6 @@ class PlayScene(Scene):
     def level_zones(self):
         lvl = self.world.services.get("level")
         return lvl.zones if lvl is not None else []
-
-    def _draw_planet(self, surface, camera, w, h):
-        px = int(w * 0.16 - camera.x * 0.02) % (w + 240) - 120
-        py = 42
-        pygame.draw.circle(surface, (58, 50, 76), (px, py), 24)
-        pygame.draw.circle(surface, (92, 80, 112), (px - 6, py - 5), 7)
-        pygame.draw.circle(surface, (92, 80, 112), (px + 8, py + 8), 4)
-        pygame.draw.ellipse(surface, (128, 116, 158), (px - 40, py - 8, 80, 16), 2)
-
-    def _draw_clouds(self, surface, camera, w, h):
-        layer = pygame.Surface((w, h), pygame.SRCALPHA)
-        for par, alpha, ybase, cw in ((0.06, 55, 22, 130), (0.13, 80, 56, 96)):
-            off = int(camera.x * par + self.play_time * 12)
-            x = -(off % int(cw * 1.7)) - int(cw * 1.7)
-            while x < w + cw:
-                pygame.draw.ellipse(layer, (16, 18, 32, alpha), (x, ybase, cw, 42))
-                pygame.draw.ellipse(layer, (16, 18, 32, alpha),
-                                    (x + cw * 0.45, ybase - 9, cw, 38))
-                x += int(cw * 1.7)
-        surface.blit(layer, (0, 0))
-
-    def _draw_hills(self, surface, camera, w, h):
-        layers = [(0.10, (24, 28, 42), 96, 260), (0.22, (32, 38, 54), 62, 190)]
-        for par, color, peak, width in layers:
-            offset = int(camera.x * par) % width
-            x = -offset
-            while x < w + width:
-                pygame.draw.polygon(surface, color,
-                                    [(x, h), (x + width // 2, h - peak), (x + width, h)])
-                x += width
-
-    def _draw_ruins(self, surface, camera, w, h):
-        color = (22, 24, 36)
-        base = h - 56
-        offset = int(camera.x * 0.34) % 190
-        x = -offset
-        i = 0
-        while x < w + 190:
-            hh = 34 + (i % 3) * 20
-            pygame.draw.rect(surface, color, (x + 42, base - hh, 26, hh))
-            pygame.draw.rect(surface, color, (x + 96, base - int(hh * 0.7), 18, hh))
-            pygame.draw.rect(surface, color, (x + 128, base - 22, 40, 22))
-            x += 190
-            i += 1
-
-    def _draw_fog(self, surface, w, h):
-        fog = pygame.Surface((w, 90), pygame.SRCALPHA)
-        for y in range(90):
-            a = int(70 * (1 - y / 90) ** 1.5)
-            pygame.draw.line(fog, (140, 160, 195, a), (0, y), (w, y))
-        surface.blit(fog, (0, h - 96))
 
     def _draw_rain(self, surface):
         """Simple single-layer rain for the surface."""

@@ -94,7 +94,6 @@ App.run()
        │    └─ Scene.update(dt) -> World.update(dt)
        │         └─ each System.update(world, dt)   # sorted by priority
        │         └─ World.flush()  -> destroy dead entities
-       │         └─ EventBus.flush()
        ├─ SceneManager.draw(canvas)
        │    └─ Scene.draw() -> background, World.draw(), HUD
        └─ backend.present(canvas)          # platform: integer-scale + flip

@@ -9,14 +9,10 @@ from __future__ import annotations
 
 # -- studio -----------------------------------------------------------------
 STUDIO = "RL PROJECTS"
-AUTHOR = "Renan Lucas Vieira Hilário"
 COPYRIGHT = "Copyright (C) 2026 Renan Lucas Vieira Hilário"
-LICENSE = "GPL-3.0-or-later"
 
 #: engine that powers the current (Python) build
 ENGINE = "Vesper engine"
-#: engine the game is rewritten onto in stage 2
-TARGET_ENGINE = "Neko engine"
 
 # -- three-stage roadmap ----------------------------------------------------
 #: The stage the code in this repository currently represents.

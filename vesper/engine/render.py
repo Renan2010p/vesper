@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import math
 import random
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 
 import pygame
@@ -26,9 +26,6 @@ class Camera:
         self._shake_time = 0.0
         self._shaking = 0.0
         self.lerp = 0.18
-
-    def set_bounds(self, width: float, height: float) -> None:
-        self.bounds = pygame.Rect(0, 0, int(width), int(height))
 
     def set_bounds_rect(self, rect) -> None:
         """Limit the view to an arbitrary world-space rectangle (one room)."""
@@ -76,10 +73,6 @@ class Camera:
             ox += random.uniform(-self._shake, self._shake)
             oy += random.uniform(-self._shake, self._shake)
         return int(-ox), int(-oy)
-
-    def to_screen(self, wx: float, wy: float) -> Tuple[int, int]:
-        ox, oy = self.offset
-        return int(wx) + ox, int(wy) + oy
 
     def view_rect(self) -> pygame.Rect:
         return pygame.Rect(int(self.x), int(self.y), self.viewport_w, self.viewport_h)

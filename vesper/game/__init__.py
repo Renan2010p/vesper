@@ -26,13 +26,13 @@ START_SCENE = "splash"
 
 def app_config():
     from vesper.engine.app import AppConfig
-    from .config import LOGICAL_H, LOGICAL_W, TITLE
+    from .config import FPS, LOGICAL_H, LOGICAL_W, TITLE
 
     return AppConfig(
         title=TITLE,
         window_size=(LOGICAL_W * 2, LOGICAL_H * 2),
         render_size=(LOGICAL_W, LOGICAL_H),
-        fps=60,
+        fps=FPS,
         gravity=2200.0,
     )
 

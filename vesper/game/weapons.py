@@ -7,7 +7,6 @@ Weapons describe how a shot behaves; the projectile prefab is looked up by
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
 
 from .config import (BEAM_DAMAGE, CHARGE_DAMAGE, MISSILE_DAMAGE)
 

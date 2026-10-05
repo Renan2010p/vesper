@@ -8,7 +8,7 @@ matching system without touching the core.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, Optional, Set, Tuple
+from typing import Any, Dict, Set, Tuple
 
 
 @dataclass

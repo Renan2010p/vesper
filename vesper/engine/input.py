@@ -68,6 +68,3 @@ class InputMap:
 
     def axis(self, negative: str = "left", positive: str = "right") -> float:
         return (1.0 if self.held(positive) else 0.0) - (1.0 if self.held(negative) else 0.0)
-
-    def vertical_axis(self) -> float:
-        return (1.0 if self.held("down") else 0.0) - (1.0 if self.held("up") else 0.0)

@@ -100,7 +100,8 @@ def test_registry():
         pass
     else:  # pragma: no cover
         raise AssertionError("duplicate registration should fail")
-    assert reg.names("thing") == ["a"]
+    assert reg.has("thing", "a")
+    assert not reg.has("thing", "b")
 
 
 def test_physics_lands_on_floor():

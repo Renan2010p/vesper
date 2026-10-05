@@ -6,7 +6,7 @@ added by registering a factory -- the manager never changes.
 
 from __future__ import annotations
 
-from typing import Callable, Dict, Optional
+from typing import Callable, Optional
 
 from .ecs import World
 from .events import EventBus

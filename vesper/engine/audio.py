@@ -11,7 +11,7 @@ from __future__ import annotations
 import array
 import math
 import random
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Dict, Optional, Sequence, Tuple
 
 from .platform import Backend, SoundHandle
 

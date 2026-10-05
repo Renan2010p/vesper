@@ -80,4 +80,6 @@ class SplashScene(Scene):
                   size=17, color=sub, center=True)
         footer = tuple(min(255, c * a // 255) for c in (110, 125, 150))
         draw_text(surface, self.app.fonts, rlprojects.stage_line(),
-                  (w // 2, h - 20), size=13, color=footer, center=True)
+                  (w // 2, h - 34), size=12, color=footer, center=True)
+        draw_text(surface, self.app.fonts, rlprojects.COPYRIGHT,
+                  (w // 2, h - 18), size=11, color=footer, center=True)

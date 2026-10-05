@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, Tuple
 from vesper.engine.tilemap import TileMap
 
 from .ascii_level import ITEM_BY_CHAR, TILE_BY_CHAR, parse
-from .config import T_EMPTY, T_ROCK, T_SURFACE, TILE
+from .config import T_EMPTY, T_ROCK, TILE
 from .rooms import ROOMS
 
 

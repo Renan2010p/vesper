@@ -14,14 +14,7 @@ import pygame
 
 from vesper.engine.tilemap import TileDef, TileMap, TileSet
 
-from .config import (CORE_GOAL, T_BOSS_ARMOR, T_CRYSTAL, T_EMPTY, T_GRATE,
-                     T_ICE, T_LAVA, T_METAL, T_MOSS, T_ONEWAY, T_ROCK,
-                     T_ROCK_DARK, T_ROCK_FG, T_RUIN, T_SPIKE, T_SURFACE,
-                     T_SURFACE_TOP, T_VINE, TILE, ZONE_COLORS)
-
-MAP_W = 200
-MAP_H = 112
-TILE_SIZE = TILE
+from .config import T_BOSS_ARMOR, T_CRYSTAL, T_GRATE, T_ICE, T_LAVA, T_METAL, T_MOSS, T_ONEWAY, T_ROCK, T_ROCK_DARK, T_ROCK_FG, T_RUIN, T_SPIKE, T_SURFACE, T_SURFACE_TOP, T_VINE, ZONE_COLORS
 
 
 def build_tileset() -> TileSet:

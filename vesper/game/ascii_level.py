@@ -67,11 +67,6 @@ class AsciiMap:
     def height(self) -> int:
         return len(self.rows)
 
-    def char(self, col: int, row: int) -> str:
-        if 0 <= row < self.height and 0 <= col < len(self.rows[row]):
-            return self.rows[row][col]
-        return " "
-
     def horizontal_runs(self, chars: str) -> Iterator[Tuple[str, int, int, int]]:
         for r, line in enumerate(self.rows):
             c = 0
@@ -84,19 +79,6 @@ class AsciiMap:
                     yield ch, c0, r, c - c0
                 else:
                     c += 1
-
-    def vertical_runs(self, chars: str) -> Iterator[Tuple[str, int, int, int]]:
-        for c in range(self.width):
-            r = 0
-            while r < self.height:
-                ch = self.char(c, r)
-                if ch in chars:
-                    c0, r0 = c, r
-                    while r < self.height and self.char(c, r) == ch:
-                        r += 1
-                    yield ch, c0, r0, r - r0
-                else:
-                    r += 1
 
     def first(self, target: str) -> Optional[Tuple[int, int]]:
         for r, line in enumerate(self.rows):

@@ -7,7 +7,7 @@ new tile kinds are added by registering a definition -- no code changes.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, Iterator, List, Tuple
 
 EMPTY = 0
@@ -85,11 +85,6 @@ class TileMap:
     def set(self, tx: int, ty: int, tile_id: int) -> None:
         if self.in_bounds(tx, ty):
             self.grid[ty][tx] = tile_id
-
-    def fill_rect(self, tx: int, ty: int, w: int, h: int, tile_id: int) -> None:
-        for y in range(ty, ty + h):
-            for x in range(tx, tx + w):
-                self.set(x, y, tile_id)
 
     # -- queries ----------------------------------------------------------
     def is_solid(self, tx: int, ty: int) -> bool:

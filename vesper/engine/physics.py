@@ -54,33 +54,21 @@ class Body:
 
 
 class CollisionService:
-    """Aggregates solid/hazard providers registered by the game layer.
+    """Aggregates solid providers registered by the game layer.
 
-    A provider is ``callable(world, rect) -> list``:
-
-    * solids return ``[(pygame.Rect, oneway: bool), ...]``
-    * hazards return ``[(pygame.Rect, damage_per_second), ...]``
+    A provider is ``callable(world, rect) -> list`` returning
+    ``[(pygame.Rect, oneway: bool), ...]``.
     """
 
     def __init__(self) -> None:
         self.solid_providers: List[Callable] = []
-        self.hazard_providers: List[Callable] = []
 
     def add_solids(self, provider: Callable) -> None:
         self.solid_providers.append(provider)
 
-    def add_hazards(self, provider: Callable) -> None:
-        self.hazard_providers.append(provider)
-
     def solids(self, world: World, rect: Rect) -> List[Tuple[Rect, bool]]:
         out: List[Tuple[Rect, bool]] = []
         for provider in self.solid_providers:
-            out.extend(provider(world, rect))
-        return out
-
-    def hazards(self, world: World, rect: Rect) -> List[Tuple[Rect, int]]:
-        out: List[Tuple[Rect, int]] = []
-        for provider in self.hazard_providers:
             out.extend(provider(world, rect))
         return out
 

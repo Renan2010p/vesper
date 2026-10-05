@@ -8,7 +8,7 @@ name at runtime, which means new content can be added purely by registering it
 
 from __future__ import annotations
 
-from typing import Any, Callable, Dict
+from typing import Any, Dict
 
 
 class Registry:
@@ -43,24 +43,8 @@ class Registry:
             known = ", ".join(sorted(self._data.get(kind, {}))) or "<none>"
             raise KeyError(f"{kind}:{name!r} not registered (known: {known})") from exc
 
-    def create(self, kind: str, name: str, *args, **kwargs) -> Any:
-        return self.get(kind, name)(*args, **kwargs)
-
     def has(self, kind: str, name: str) -> bool:
         return name in self._data.get(kind, {})
-
-    def names(self, kind: str):
-        return sorted(self._data.get(kind, {}))
-
-    def all(self, kind: str) -> Dict[str, Any]:
-        return dict(self._data.get(kind, {}))
-
-    # -- convenience ------------------------------------------------------
-    def callable(self, kind: str, name: str) -> Callable:
-        obj = self.get(kind, name)
-        if not callable(obj):
-            raise TypeError(f"{kind}:{name} is not callable")
-        return obj
 
 
 #: The single global registry used by the game.  A fresh one is created for the

@@ -14,7 +14,6 @@ from typing import Any, Callable, DefaultDict, List
 class EventBus:
     def __init__(self) -> None:
         self._subs: DefaultDict[str, List[Callable]] = defaultdict(list)
-        self._queue: List[tuple] = []
 
     def on(self, name: str, fn: Callable) -> Callable:
         self._subs[name].append(fn)
@@ -25,19 +24,9 @@ class EventBus:
             self._subs[name].remove(fn)
 
     def emit(self, name: str, **payload: Any) -> None:
-        """Publish immediately to every listener."""
+        """Publish to every listener immediately."""
         for fn in list(self._subs.get(name, ())):
             fn(**payload)
 
-    def post(self, name: str, **payload: Any) -> None:
-        """Queue an event to be flushed at the end of the frame."""
-        self._queue.append((name, payload))
-
-    def flush(self) -> None:
-        queue, self._queue = self._queue, []
-        for name, payload in queue:
-            self.emit(name, **payload)
-
     def clear(self) -> None:
         self._subs.clear()
-        self._queue.clear()

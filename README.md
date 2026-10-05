@@ -22,8 +22,8 @@ system to stop the machine called *the Warden*.
   and a descent shaft into the depths.
 - **Shoot-to-open hatches** — colour-coded shutter doors (any beam / missile /
   super missile) that open when shot and close behind you.
-- **Exploration map** that reveals each zone as you visit it — rendered as a
-  **text grid drawn with `#`** (like an ASCII dungeon map).
+- **Exploration map** that reveals each room as you visit it — a
+  Super-Metroid-style **room graph** with door links.
 - **Abilities** — Missile, Charge Beam, Drone Form (morph), Grav Boots
   (double jump), Phase Dash, Mag Grip (wall jump) and Super Missile.
 - **Combat** — beam, charged beam, missiles, breakable walls, multi-phase boss.
@@ -75,12 +75,12 @@ vesper/engine/          reusable, game-agnostic engine
   save.py / scene.py    JSON saves, scene stack
 vesper/game/            content and rules
   components.py         data-only components
-  systems.py            rules that operate on components
+  systems/              rules that operate on components (one file per system)
   prefabs.py            entity factories (player, enemies, items, gates…)
   enemies.py / boss.py  creatures + AI behaviours
   items.py / weapons.py items and shots
   level.py              tileset + map construction
-  art.py                procedural sprites
+  art/                  procedural sprites (player, enemies, props, …)
   hud.py                HUD and minimap
   scenes/               splash, title, intro, play, pause, ship, end
   content/register.py   single place that registers everything

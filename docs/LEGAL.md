@@ -39,7 +39,7 @@ Trademark protects names and branding that identify a source of goods:
 The safest path — the one this project takes — is to create every asset
 yourself:
 
-- **Art:** VESPER draws all sprites procedurally in `vesper/game/art.py`
+- **Art:** VESPER draws all sprites procedurally in `vesper/game/art/`
   (geometric pixel art).  No sprite is ripped, traced or sampled from another
   game.
 - **Audio:** all sounds and the music loop are synthesised from oscillators in

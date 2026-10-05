@@ -156,15 +156,8 @@ class Backend:
         """Return the set of :class:`Key` held this frame."""
         raise NotImplementedError
 
-    def key_name(self, key: Key) -> str:
-        """Human-readable key name (for on-screen prompts/rebinding)."""
-        return key.name
-
     # -- fonts ------------------------------------------------------------
     def load_font(self, size: int, bold: bool = False):
-        raise NotImplementedError
-
-    def load_mono_font(self, size: int):
         raise NotImplementedError
 
     # -- audio ------------------------------------------------------------

@@ -68,9 +68,9 @@ direct equivalent and must be composed.
 | `pygame.transform.scale(surf, (w,h))`    | `neko.texture.draw(tex, dst, src, alpha)`|
 | `pygame.transform.rotate(...)`           | `neko.texture.draw_rotated(...)`         |
 
-### Procedural art (`art.py`, `sprites.py`)
+### Procedural art (`art/`, `sprites.py`)
 
-`art.py` builds sprites at runtime with `pygame.Surface` + `pygame.draw`. In
+`art/` builds sprites at runtime with `pygame.Surface` + `pygame.draw`. In
 stage 2:
 
 1. render the same pixels into a CPU buffer, then

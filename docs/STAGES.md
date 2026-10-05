@@ -82,9 +82,9 @@ Goal: the **same game**, 100% Zig, built on Neko. `fnwf`'s
 | `engine/registry.py`              | Zig comptime tables / a small registry                          |
 | `game/config.py`                  | `config/constants.zig`, `config/colors.zig`                     |
 | `game/i18n.py`                    | `neko.localization` + a game table                              |
-| `game/art.py`                     | procedural textures via `neko.texture.create/update`            |
+| `game/art/`                       | procedural textures via `neko.texture.create/update`            |
 | `game/scenes/*`                   | `states/*` (`splash`, `title`, `intro`, `gameplay`, …)          |
-| `game/systems.py`                 | `systems/*` (movement, combat, enemies, camera)                 |
+| `game/systems/`                   | `systems/*` (movement, combat, enemies, camera)                 |
 | `game/level.py`, `rooms.py`       | `world/*`                                                       |
 | `rlprojects.py`                   | `config/studio.zig`                                             |
 

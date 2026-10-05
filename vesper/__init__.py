@@ -18,4 +18,3 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 __version__ = "1.0.0"
 __license__ = "GPL-3.0-or-later"
-GAME_TITLE = "VESPER"

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List
 
 import pygame
 
@@ -282,11 +282,8 @@ draw_minimap = draw_map
 
 
 # ---------------------------------------------------------------------------
-# ASCII map (text grid drawn with '#')
+# Map tile glyphs (used by the room map and the export tool)
 # ---------------------------------------------------------------------------
-
-_ASCII_CACHE: dict = {}
-
 
 def _tile_char(definition) -> str:
     if definition.breakable:
@@ -300,25 +297,6 @@ def _tile_char(definition) -> str:
     if definition.name in ("vine", "grate", "moss"):
         return ","
     return " "
-
-
-_TILE_COLOR = {
-    "#": (96, 104, 126),
-    "=": (124, 112, 92),
-    "%": (205, 155, 85),
-    "^": (205, 214, 230),
-    "~": (255, 140, 60),
-    ",": (70, 140, 100),
-}
-
-
-def _ascii_glyph(font: pygame.font.Font, char: str, color):
-    key = (id(font), char, color)
-    surf = _ASCII_CACHE.get(key)
-    if surf is None:
-        surf = font.render(char, True, color)
-        _ASCII_CACHE[key] = surf
-    return surf
 
 
 def draw_room_map(surface: pygame.Surface, world, fonts: Fonts) -> None:
@@ -383,102 +361,3 @@ def draw_room_map(surface: pygame.Surface, world, fonts: Fonts) -> None:
     draw_text(surface, fonts, t("hud.explored", a=len(visited), b=total),
               (surface.get_width() // 2, surface.get_height() - 22), size=15,
               color=(130, 155, 185), center=True)
-
-
-def draw_ascii_map(surface: pygame.Surface, world, fonts: Fonts, visited=None) -> None:
-    """Area map rendered as a monospace grid of '#' characters."""
-    tm = world.services.get("tilemap")
-    level = world.services.get("level")
-    if tm is None:
-        return
-    visited = visited or set()
-    font = fonts.get_mono(14)
-    cw, ch = font.size("#")
-    cw = max(1, cw)
-    ch = max(1, ch)
-
-    area = pygame.Rect(14, 38, surface.get_width() - 28,
-                       surface.get_height() - 84)
-    cols = max(8, area.w // cw)
-    rows = max(6, area.h // ch)
-
-    player = world.first(tag="player")
-    if player is not None:
-        ptr = player.get(Transform)
-        cx = int((ptr.x + ptr.w / 2) // tm.tile_size)
-        cy = int((ptr.y + ptr.h / 2) // tm.tile_size)
-    else:
-        cx = cy = 0
-    x0 = max(0, min(cx - cols // 2, tm.width - cols))
-    y0 = max(0, min(cy - rows // 2, tm.height - rows))
-
-    # which tiles belong to a visited zone?
-    zone_tiles = []
-    if level is not None:
-        ts = tm.tile_size
-        for zone in level.zones:
-            if zone.name in visited:
-                r = zone.rect
-                zone_tiles.append(pygame.Rect(r.x // ts, r.y // ts,
-                                              r.w // ts, r.h // ts))
-
-    def revealed(tx, ty):
-        for zr in zone_tiles:
-            if zr.collidepoint(tx, ty):
-                return True
-        return False
-
-    # entity markers on top of the grid
-    markers = {}
-    for ent in world.query():
-        etr = ent.get(Transform)
-        if etr is None:
-            continue
-        tx = int((etr.x + etr.w / 2) // tm.tile_size)
-        ty = int((etr.y + etr.h / 2) // tm.tile_size)
-        if ent.has_tag("player"):
-            markers[(tx, ty)] = ("@", (120, 250, 255))
-        elif ent.has_tag("ship"):
-            markers[(tx, ty)] = ("V", (150, 240, 255))
-        elif ent.has_tag("save"):
-            markers[(tx, ty)] = ("S", (120, 240, 180))
-        elif ent.has_tag("boss"):
-            markers[(tx, ty)] = ("B", (255, 90, 110))
-        elif ent.has_tag("gate"):
-            markers[(tx, ty)] = ("G", (150, 240, 255))
-        elif ent.has_tag("door"):
-            markers[(tx, ty)] = ("D", (255, 200, 120))
-        elif ent.has_tag("pickup"):
-            markers.setdefault((tx, ty), ("!", (255, 230, 140)))
-
-    for row in range(rows):
-        ty = y0 + row
-        for col in range(cols):
-            tx = x0 + col
-            px = area.left + col * cw
-            py = area.top + row * ch
-            if tx < 0 or ty < 0 or tx >= tm.width or ty >= tm.height:
-                continue
-            if not revealed(tx, ty):
-                continue
-            marker = markers.get((tx, ty))
-            if marker is not None:
-                char, color = marker
-            else:
-                definition = tm.get_def(tx, ty)
-                char = _tile_char(definition)
-                if char == " ":
-                    continue
-                color = _TILE_COLOR.get(char, (120, 130, 150))
-            surface.blit(_ascii_glyph(font, char, color), (px, py))
-
-    draw_text(surface, fonts, t("map.title"), (surface.get_width() // 2, 8), size=22,
-              color=(180, 220, 255), center=True, bold=True)
-    draw_text(surface, fonts, t("map.legend"),
-              (surface.get_width() // 2, surface.get_height() - 34),
-              size=13, color=(150, 168, 195), center=True)
-    explored = len(zone_tiles)
-    total = len(level.zones) if level is not None else 0
-    draw_text(surface, fonts, t("map.footer", a=explored, b=total),
-              (surface.get_width() // 2, surface.get_height() - 18), size=13,
-              color=(120, 140, 170), center=True)

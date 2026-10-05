@@ -12,7 +12,7 @@ graphics backend for stage 1; ``docs/PORTING.md`` maps each one to its Neko
 from __future__ import annotations
 
 import os
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 import pygame
 
@@ -144,13 +144,6 @@ class PygameBackend(Backend):
         font = pygame.font.Font(None, size)
         font.set_bold(bold)
         return font
-
-    def load_mono_font(self, size: int):
-        try:
-            return pygame.font.SysFont(
-                "dejavusansmono,liberationmono,monospace,couriernew", size)
-        except Exception:  # pragma: no cover
-            return pygame.font.Font(None, size)
 
     # -- audio ------------------------------------------------------------
     def audio_ready(self) -> bool:
