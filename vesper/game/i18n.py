@@ -1,0 +1,277 @@
+"""Internationalisation: Português (padrão) e English.
+
+Usage::
+
+    from vesper.game.i18n import t, set_locale
+    t("menu.new")            # -> "NOVA MISSÃO"
+    t("hud.explored", a=2, b=8)
+"""
+
+from __future__ import annotations
+
+from typing import Dict, List
+
+LOCALES: List[str] = ["pt", "en"]
+DEFAULT_LOCALE = "pt"
+
+_current = DEFAULT_LOCALE
+
+_STRINGS: Dict[str, Dict[str, str]] = {
+    "pt": {
+        # title / menus
+        "menu.new": "NOVA MISSÃO",
+        "menu.continue": "CONTINUAR",
+        "menu.sound": "SOM",
+        "menu.language": "IDIOMA",
+        "menu.quit": "SAIR",
+        "on": "LIGADO",
+        "off": "DESLIGADO",
+        "lang.pt": "Português",
+        "lang.en": "English",
+        "title.subtitle": "PROFUNDEZAS DE NARA",
+        "title.controls": "Setas mover  •  Z pular  •  X atirar  •  C dash  •  V míssil  •  Enter pausa",
+        "title.license": "GPL-3.0  •  obra original",
+        "title.studio": "um jogo RL PROJECTS",
+        "splash.tagline": "Jogos independentes",
+        "splash.engine": "Feito com o motor Vesper",
+        # zones
+        "zone.surface": "SUPERFÍCIE DE NARA",
+        "zone.landing": "LOCAL DE POUSO",
+        "zone.verdant": "CAVERNA VERDEJANTE",
+        "zone.hive": "COLMEIA",
+        "zone.shaft": "POÇO GRAVITACIONAL",
+        "zone.vault": "COFRE GELADO",
+        "zone.furnace": "NÚCLEO FORNALHA",
+        "zone.aegis": "NÚCLEO AEGIS",
+        "room.cave": "GRUTA",
+        "room.cave2": "GRUTA PROFUNDA",
+        "room.outer": "PLATÔ EXTERNO",
+        # items
+        "item.energy_tank": "TANQUE DE ENERGIA",
+        "item.energy_tank.desc": "Energia máxima aumentada",
+        "item.missile_tank": "TANQUE DE MÍSSEIS",
+        "item.missile_tank.desc": "Capacidade de mísseis aumentada",
+        "item.missile": "MÓDULO DE MÍSSIL",
+        "item.missile.desc": "Aperte [V] para lançar mísseis",
+        "item.charge": "TIRO CARREGADO",
+        "item.charge.desc": "Segure [X] para carregar um tiro",
+        "item.morph": "FORMA DRONE",
+        "item.morph.desc": "Aperte [↓] para encolher e rolar",
+        "item.grav_boots": "BOTAS GRAV",
+        "item.grav_boots.desc": "Pule de novo no ar",
+        "item.dash": "INVESTIDA PHASE",
+        "item.dash.desc": "Aperte [C] para avançar num piscar",
+        "item.wall_grip": "GRIP MAGNÉTICO",
+        "item.wall_grip.desc": "Pule em paredes verticais",
+        "item.super_missile": "SUPER MÍSSIL",
+        "item.super_missile.desc": "Destrói blindagem pesada",
+        "item.core": "NÚCLEO DE NARA",
+        "item.core.desc": "O portão final desperta",
+        "item.map": "MAPA DA ÁREA",
+        "item.map.desc": "Revela o mapa local",
+        # hud / map
+        "hud.vitals": "VITAIS",
+        "hud.nara": "NARA",
+        "hud.warden": "O WARDEN",
+        "hud.explored": "explorado {a}/{b}",
+        "map.title": "MAPA DA ÁREA",
+        "map.legend": "# parede  . vazio  = plataforma  ^ espinho  ~ lava  % quebrável  D escotilha  G portão  S save  V nave  ! item  @ você",
+        "map.footer": "explorado {a}/{b}   •   Esc/Tab voltar",
+        "map.none": "Nenhuma área explorada ainda.",
+        # toasts
+        "toast.landing_title": "SUPERFÍCIE DE NARA",
+        "toast.landing_sub": "Local de pouso da caçadora",
+        "toast.recovered": "RECUPERADA",
+        "toast.recovered_sub": "Retornando ao último farol",
+        "toast.saved": "SISTEMA SALVO",
+        "toast.saved_sub": "Progresso registrado",
+        "toast.energy": "ENERGIA RESTAURADA",
+        "toast.energy_sub": "Casco e munição reabastecidos",
+        "toast.mission_saved": "MISSÃO SALVA",
+        "toast.mission_saved_sub": "Progresso registrado",
+        "toast.path_open": "CAMINHO ABERTO",
+        "toast.boss": "O WARDEN",
+        "toast.boss_sub": "Guardião do Núcleo de Nara",
+        # ship
+        "ship.title": "NAVE",
+        "ship.restored": "Energia restaurada.",
+        "ship.saved": "Missão salva.",
+        "ship.save_q": "Salvar esta missão?",
+        "ship.save": "SALVAR MISSÃO",
+        "ship.leave": "SAIR",
+        "ship.board": "^  ENTRAR NA NAVE",
+        "ship.hint": "Enter escolher  •  Esc sair",
+        # pause
+        "pause.title": "PAUSA",
+        "pause.resume": "CONTINUAR",
+        "pause.map": "MAPA DA ÁREA",
+        "pause.sound": "SOM",
+        "pause.language": "IDIOMA",
+        "pause.abort": "VOLTAR AO TÍTULO",
+        "pause.hint": "Enter/Esc continuar  •  Tab alterna o mapa",
+        # end
+        "end.win": "MISSÃO CUMPRIDA",
+        "end.lose": "MISSÃO FRACASSADA",
+        "end.win_line": "O Warden cai. O Núcleo de Nara silencia.",
+        "end.time": "Tempo  {mm:02d}:{ss:02d}",
+        "end.return": "Aperte Enter para voltar",
+        # intro
+        "intro.1.title": "SISTEMA NARA",
+        "intro.1.1": "Um mundo fronteiriço morto, cercado por tempestades ácidas.",
+        "intro.1.2": "Nada pousa aqui há trinta anos.",
+        "intro.2.title": "O CONTRATO",
+        "intro.2.1": "A caçadora de recompensas Vesper foi contratada para recuperar o Núcleo de Nara —",
+        "intro.2.2": "uma fonte de energia enterrada em algum lugar sob a superfície.",
+        "intro.2.3": "O briefing dizia que o mundo era inabitado.",
+        "intro.3.title": "O BRIEFING ESTAVA ERRADO",
+        "intro.3.1": "Algo lá embaixo ainda está desperto.",
+        "intro.3.2": "Chama-se Warden.",
+        "intro.4.title": "DESCIDA",
+        "intro.4.1": "A nave dela corta a chuva e pousa",
+        "intro.4.2": "no platô central.",
+        "intro.4.3": "Sob a tempestade, uma escotilha espera na rocha.",
+        "intro.prompt_next": "Aperte ENTER",
+        "intro.prompt_land": "Aperte ENTER para pousar",
+    },
+    "en": {
+        "menu.new": "NEW MISSION",
+        "menu.continue": "CONTINUE",
+        "menu.sound": "SOUND",
+        "menu.language": "LANGUAGE",
+        "menu.quit": "QUIT",
+        "on": "ON",
+        "off": "OFF",
+        "lang.pt": "Português",
+        "lang.en": "English",
+        "title.subtitle": "DEPTHS OF NARA",
+        "title.controls": "Arrows move  •  Z jump  •  X fire  •  C dash  •  V missile  •  Enter pause",
+        "title.license": "GPL-3.0  •  original work",
+        "title.studio": "an RL PROJECTS game",
+        "splash.tagline": "Independent games",
+        "splash.engine": "Powered by the Vesper engine",
+        "zone.surface": "NARA SURFACE",
+        "zone.landing": "LANDING SITE",
+        "zone.verdant": "VERDANT HOLLOW",
+        "zone.hive": "HIVE WARRENS",
+        "zone.shaft": "GRAVITY SHAFT",
+        "zone.vault": "FROZEN VAULT",
+        "zone.furnace": "FURNACE CORE",
+        "zone.aegis": "AEGIS CORE",
+        "room.cave": "CAVE",
+        "room.cave2": "DEEP CAVE",
+        "room.outer": "OUTER PLATEAU",
+        "item.energy_tank": "ENERGY TANK",
+        "item.energy_tank.desc": "Maximum energy increased",
+        "item.missile_tank": "MISSILE TANK",
+        "item.missile_tank.desc": "Missile capacity increased",
+        "item.missile": "MISSILE MODULE",
+        "item.missile.desc": "Press [V] to fire missiles",
+        "item.charge": "CHARGE BEAM",
+        "item.charge.desc": "Hold [X] to charge a shot",
+        "item.morph": "DRONE FORM",
+        "item.morph.desc": "Press [Down] to compress and roll",
+        "item.grav_boots": "GRAV BOOTS",
+        "item.grav_boots.desc": "Jump again in mid-air",
+        "item.dash": "PHASE DASH",
+        "item.dash.desc": "Press [C] to blink forward",
+        "item.wall_grip": "MAG GRIP",
+        "item.wall_grip.desc": "Wall jump off vertical surfaces",
+        "item.super_missile": "SUPER MISSILE",
+        "item.super_missile.desc": "Shreds heavy plating",
+        "item.core": "NARA CORE",
+        "item.core.desc": "The final gate stirs",
+        "item.map": "AREA MAP",
+        "item.map.desc": "Reveals the local map",
+        "hud.vitals": "VITALS",
+        "hud.nara": "NARA",
+        "hud.warden": "THE WARDEN",
+        "hud.explored": "explored {a}/{b}",
+        "map.title": "AREA MAP",
+        "map.legend": "# wall  . floor  = ledge  ^ spike  ~ lava  % wall-break  D hatch  G gate  S save  V ship  ! item  @ you",
+        "map.footer": "explored {a}/{b}   •   Esc/Tab back",
+        "map.none": "No area explored yet.",
+        "toast.landing_title": "NARA SURFACE",
+        "toast.landing_sub": "Bounty hunter landing site",
+        "toast.recovered": "RECOVERED",
+        "toast.recovered_sub": "Returning to last beacon",
+        "toast.saved": "SYSTEM SAVED",
+        "toast.saved_sub": "Progress recorded",
+        "toast.energy": "ENERGY RESTORED",
+        "toast.energy_sub": "Hull and ammunition replenished",
+        "toast.mission_saved": "MISSION SAVED",
+        "toast.mission_saved_sub": "Progress recorded",
+        "toast.path_open": "PATH OPENED",
+        "toast.boss": "THE WARDEN",
+        "toast.boss_sub": "Guardian of the Nara Core",
+        "ship.title": "GUNSHIP",
+        "ship.restored": "Energy restored.",
+        "ship.saved": "Mission saved.",
+        "ship.save_q": "Save this mission?",
+        "ship.save": "SAVE MISSION",
+        "ship.leave": "LEAVE",
+        "ship.board": "^  BOARD GUNSHIP",
+        "ship.hint": "Enter select  •  Esc leave",
+        "pause.title": "PAUSED",
+        "pause.resume": "RESUME",
+        "pause.map": "AREA MAP",
+        "pause.sound": "SOUND",
+        "pause.language": "LANGUAGE",
+        "pause.abort": "ABORT TO TITLE",
+        "pause.hint": "Enter/Esc resume  •  Tab toggles map",
+        "end.win": "MISSION COMPLETE",
+        "end.lose": "MISSION FAILED",
+        "end.win_line": "The Warden falls. The Nara Core is silent.",
+        "end.time": "Time  {mm:02d}:{ss:02d}",
+        "end.return": "Press Enter to return",
+        "intro.1.title": "NARA SYSTEM",
+        "intro.1.1": "A dead frontier world, ringed by acid storms.",
+        "intro.1.2": "Nothing has landed here in thirty years.",
+        "intro.2.title": "THE CONTRACT",
+        "intro.2.1": "Bounty hunter Vesper was hired to recover the Nara Core —",
+        "intro.2.2": "a power source buried somewhere beneath the surface.",
+        "intro.2.3": "The brief said the world was uninhabited.",
+        "intro.3.title": "THE BRIEF WAS WRONG",
+        "intro.3.1": "Something down there is still awake.",
+        "intro.3.2": "It calls itself the Warden.",
+        "intro.4.title": "DESCENT",
+        "intro.4.1": "Her gunship cuts through the rain and sets down",
+        "intro.4.2": "on the central plateau.",
+        "intro.4.3": "Below the storm, a hatch waits in the rock.",
+        "intro.prompt_next": "Press ENTER",
+        "intro.prompt_land": "Press ENTER to land",
+    },
+}
+
+
+def available() -> List[str]:
+    return list(LOCALES)
+
+
+def get_locale() -> str:
+    return _current
+
+
+def set_locale(locale: str) -> str:
+    global _current
+    if locale in _STRINGS:
+        _current = locale
+    return _current
+
+
+def next_locale(locale: str | None = None) -> str:
+    loc = locale or _current
+    idx = LOCALES.index(loc) if loc in LOCALES else 0
+    return LOCALES[(idx + 1) % len(LOCALES)]
+
+
+def t(key: str, **kwargs) -> str:
+    table = _STRINGS.get(_current, _STRINGS[DEFAULT_LOCALE])
+    text = table.get(key)
+    if text is None:
+        text = _STRINGS[DEFAULT_LOCALE].get(key, key)
+    if kwargs:
+        try:
+            return text.format(**kwargs)
+        except (KeyError, IndexError, ValueError):
+            return text
+    return text
