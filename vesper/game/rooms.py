@@ -1,8 +1,11 @@
-"""Todas as salas de Nara, escritas como grades de texto.
+"""Todas as salas de Nara, escritas como grades de texto em Python.
 
 O jogo carrega UMA sala por vez.  Cada sala tem seu proprio tilemap local
 (origem em 0,0) e e ligada as vizinhas por escotilhas nas bordas.  Ao
 atravessar uma escotilha aberta, a sala de destino e carregada com fade.
+
+Nenhum arquivo ``.txt`` e necessario: cada grade e uma lista de linhas
+(``["####", "#..#", ...]``) declarada aqui mesmo.
 
 Legenda
 -------
@@ -16,14 +19,14 @@ Legenda
 Cada sala:
     label   chave i18n do nome mostrado ao entrar
     zone    zona de fundo ("surface" tem chuva)
-    grid    a grade de texto
+    grid    a grade de texto (lista de linhas)
     exits   ligacoes: {"left"/"right": {"to": <sala>, "enter": "left"/"right",
                                          "tier": 0/1/2}}
 """
 
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, List
 
 
 def _side(width: int, inner: str) -> str:
@@ -31,7 +34,8 @@ def _side(width: int, inner: str) -> str:
     return "#" + inner.ljust(width - 2)[:width - 2] + "#"
 
 
-LANDING_GRID = "\n".join([
+#: Surface landing site (rainy overworld where the gunship is parked).
+NARA_SURFACE: List[str] = [
     "########################",
     "#                      #",
     "#                      #",
@@ -44,9 +48,9 @@ LANDING_GRID = "\n".join([
     "#        =====         #",
     "#                      #",
     "########################",
-])
+]
 
-CAVE_GRID = "\n".join([
+CAVE: List[str] = [
     "########################################",
     "#.....#......#.....#......#......#.....#",
     "#......................................#",
@@ -69,9 +73,9 @@ CAVE_GRID = "\n".join([
     "#......................................#",
     "#......................................#",
     "########################################",
-])
+]
 
-CAVE2_GRID = "\n".join([
+CAVE2: List[str] = [
     _side(24, ""),                      # r0
     _side(24, ""),                      # r1
     _side(24, ""),                      # r2
@@ -86,9 +90,9 @@ CAVE2_GRID = "\n".join([
     _side(24, ""),                      # r11
     _side(24, ""),                      # r12
     "#" * 24,                           # r13 floor
-])
+]
 
-OUTER_GRID = "\n".join([
+OUTER: List[str] = [
     _side(28, ""),
     _side(28, ""),
     _side(28, ""),
@@ -101,13 +105,13 @@ OUTER_GRID = "\n".join([
     _side(28, ""),
     _side(28, ""),
     "#" * 28,
-])
+]
 
 ROOMS: Dict[str, Dict] = {
     "cave": {
         "label": "room.cave",
         "zone": "cave",
-        "grid": CAVE_GRID,
+        "grid": CAVE,
         "exits": {
             "right": {"to": "landing", "enter": "left", "at": 4},
             "left": {"to": "cave2", "enter": "right"},
@@ -117,7 +121,7 @@ ROOMS: Dict[str, Dict] = {
     "cave2": {
         "label": "room.cave2",
         "zone": "cave",
-        "grid": CAVE2_GRID,
+        "grid": CAVE2,
         "exits": {"right": {"to": "cave", "enter": "left"}},
         "enemies": [("crawler", 6, 11), ("crawler", 17, 11),
                     ("flyer", 19, 5), ("jumper", 11, 11)],
@@ -125,7 +129,7 @@ ROOMS: Dict[str, Dict] = {
     "landing": {
         "label": "zone.surface",
         "zone": "surface",
-        "grid": LANDING_GRID,
+        "grid": NARA_SURFACE,
         "exits": {
             "left": {"to": "cave", "enter": "right"},
             "right": {"to": "outer", "enter": "left"},
@@ -134,7 +138,7 @@ ROOMS: Dict[str, Dict] = {
     "outer": {
         "label": "room.outer",
         "zone": "surface",
-        "grid": OUTER_GRID,
+        "grid": OUTER,
         "exits": {"left": {"to": "landing", "enter": "right"}},
     },
 }

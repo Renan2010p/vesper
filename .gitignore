@@ -9,3 +9,8 @@ dist/
 !requirements.json
 .idea/
 .vscode/
+
+# generated level dumps / legacy text maps (level data now lives in rooms.py)
+/nara_map.txt
+/nara_surface.txt
+/levels/

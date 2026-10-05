@@ -133,20 +133,35 @@ Tiles are `TileDef`s added in `build_tileset()`.  A tile can be `solid`,
 `hazard`, `breakable`, `oneway`, `foreground`, and carry `tags`.  Add a new
 tile by adding a `TileDef`; the renderer generates its sprite automatically.
 
-## ASCII maps (text levels drawn with `#`)
+## ASCII maps (level grids in Python)
 
-A level can be written as a plain-text grid and loaded at runtime.  The Nara
-Surface is loaded from `nara_surface.txt` in the repository root (override with
-the `VESPER_SURFACE_MAP` environment variable, or drop it in
-`levels/nara_surface.txt`).
+Levels are plain-text grids drawn with `#`, declared in
+`vesper/game/rooms.py` as **lists of rows**.  No external `.txt` file is needed:
 
+```python
+NARA_SURFACE = [
+    "########################",
+    "#        NNNNN         #",
+    "#        =====         #",
+    "########################",
+]
 ```
-#                       NNNNN
-#
-#                 ###########
-|                             #
-###############################
+
+Each room ties a grid to its zone, exits, enemies and items:
+
+```python
+ROOMS = {
+    "landing": {
+        "label": "zone.surface",
+        "zone": "surface",
+        "grid": NARA_SURFACE,
+        "exits": {"left": {"to": "cave", "enter": "right"}},
+    },
+}
 ```
+
+`vesper/game/roomworld.py` parses the grid into a tile map.  Edit `rooms.py`
+and restart the game to see your changes.
 
 Tile characters:
 
@@ -172,9 +187,9 @@ Marker characters (the tile under them is left empty):
 | `S`  | save station                     |
 | `M` `C` `W` `G` `H` `K` `T` `X` | item pickups (missile, charge, morph, grav boots, dash, mag grip, energy tank, missile tank) |
 
-The grid is stamped into the surface region of the world map.  Edit the file
-and restart the game to see your changes.  `python -m tools.export_ascii_map`
-dumps the whole world back out in the same character set.
+The grid is stamped into the room's local tilemap.  `python -m
+tools.export_ascii_map` dumps a built room back out in the same character set
+(and its default `nara_map.txt` output is git-ignored).
 
 ## Tips
 

@@ -1,7 +1,8 @@
-"""Load levels from plain-text ASCII grids drawn with '#'.
+"""Parse ASCII grids drawn with '#' into tile maps.
 
-This is the format the Nara Surface uses.  Characters map to tiles; a few
-letters are *markers* that spawn entities (ship, hatch, spawn point...).
+This is the format ``rooms.py`` uses.  A grid is either a list of rows
+(``["####", "#..#"]``) or a newline-joined string; characters map to tiles and
+a few letters are *markers* that spawn entities (ship, hatch, spawn point...).
 
 Tiles
 -----
@@ -20,9 +21,7 @@ Markers (the tile under them is left empty)
 
 from __future__ import annotations
 
-import os
-from dataclasses import dataclass, field
-from pathlib import Path
+from dataclasses import dataclass
 from typing import Dict, Iterator, List, Optional, Tuple
 
 from .config import (T_CRYSTAL, T_EMPTY, T_LAVA, T_MOSS, T_ONEWAY, T_SPIKE,
@@ -107,39 +106,12 @@ class AsciiMap:
         return None
 
 
-def parse(text: str, source: str = "") -> AsciiMap:
-    lines = [ln.rstrip("\r\n\r") for ln in text.splitlines()]
+def parse(grid, source: str = "") -> AsciiMap:
+    """Normalise a grid (list of rows or one string) into an :class:`AsciiMap`."""
+    lines = grid.splitlines() if isinstance(grid, str) else list(grid)
+    lines = [ln.rstrip("\r\n\r") for ln in lines]
     while lines and not lines[-1].strip():
         lines.pop()
     width = max((len(ln) for ln in lines), default=0)
     lines = [ln.ljust(width) for ln in lines]
     return AsciiMap(lines, source)
-
-
-def load(path) -> AsciiMap:
-    p = Path(path)
-    return parse(p.read_text(encoding="utf-8"), str(p))
-
-
-def candidate_paths() -> List[Path]:
-    root = Path(__file__).resolve().parents[2]
-    paths: List[Path] = []
-    env = os.environ.get("VESPER_SURFACE_MAP")
-    if env:
-        paths.append(Path(env))
-    paths += [
-        root / "nara_surface.txt",
-        root / "levels" / "nara_surface.txt",
-        Path(__file__).with_name("content") / "levels" / "nara_surface.txt",
-    ]
-    return paths
-
-
-def load_surface() -> Optional[AsciiMap]:
-    for path in candidate_paths():
-        if path.is_file():
-            try:
-                return load(path)
-            except OSError:
-                continue
-    return None
