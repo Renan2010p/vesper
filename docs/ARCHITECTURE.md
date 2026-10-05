@@ -146,6 +146,8 @@ rebuilds the world.
 ## Saving
 
 `vesper/engine/save.py` writes JSON to
-`~/.local/share/vesper/save0.json`.  Only state (abilities, ammo, position,
-flags) is stored — never content definitions — so saves survive content
-updates and mods.
+`~/.local/share/vesper/save<N>.json` (three slots).  The **file-select**
+screen (`vesper/game/scenes/saves.py`) shows each slot's area, play time and
+completion, and lets you start, continue or erase a slot.  Only state
+(abilities, ammo, position, flags) is stored — never content definitions — so
+saves survive content updates and mods.

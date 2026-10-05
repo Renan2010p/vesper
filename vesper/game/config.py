@@ -98,3 +98,7 @@ CORE_GOAL = 2   # cores needed to open the final gate
 #: When True the world contains only the Nara Surface (no underground yet).
 #: Flip to False to re-enable the caverns, boss and full progression.
 SURFACE_ONLY = True
+
+#: the abilities the heroine can acquire (used by the file-select completion)
+ABILITY_ORDER = ["missile", "charge", "morph", "grav_boots", "dash",
+                 "wall_grip", "super_missile"]

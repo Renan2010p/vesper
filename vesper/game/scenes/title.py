@@ -31,8 +31,6 @@ class TitleScene(Scene):
 
     def _build_entries(self):
         entries = [("new", i18n.t("menu.new"))]
-        if self.app.save.exists(0):
-            entries.append(("continue", i18n.t("menu.continue")))
         sound = i18n.t("on") if self.app.audio.enabled else i18n.t("off")
         entries.append(("sound", f"{i18n.t('menu.sound')}: {sound}"))
         lang = i18n.t("lang." + i18n.get_locale())
@@ -64,9 +62,7 @@ class TitleScene(Scene):
     def _activate(self, action: str) -> None:
         self.app.audio.play("confirm")
         if action == "new":
-            self.app.switch_scene("intro")
-        elif action == "continue":
-            self.app.switch_scene("play", save=self.app.save.load(0))
+            self.app.switch_scene("saves")
         elif action == "sound":
             self.app.audio.set_enabled(not self.app.audio.enabled)
             self.entries = self._build_entries()

@@ -60,9 +60,10 @@ def _dynamic_solids(world: World, rect):
 class PlayScene(Scene):
     ROOM_FADE = 0.18
 
-    def __init__(self, app, save: Optional[SaveData] = None) -> None:
+    def __init__(self, app, save: Optional[SaveData] = None, slot: int = 0) -> None:
         super().__init__(app)
         self.save_data = save
+        self.slot = slot
         self.play_time = 0.0
         self.hud = HUD()
         self._dead = False
@@ -390,7 +391,7 @@ class PlayScene(Scene):
                    "energy_tanks": loadout.energy_tanks,
                    "missile_tanks": loadout.missile_tanks},
         )
-        self.app.save.save(data)
+        self.app.save.save(data, self.slot)
 
 
 class _RoomLevel:

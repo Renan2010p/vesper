@@ -132,6 +132,12 @@ def test_save_roundtrip():
         assert loaded.health == 42
         assert set(loaded.abilities) == {"dash", "charge"}
         assert loaded.flags["cores"] == 2
+        # separate slots and erase (used by the file-select screen)
+        manager.save(SaveData(health=7), 2)
+        assert manager.exists(2) and not manager.exists(1)
+        manager.delete(2)
+        assert not manager.exists(2)
+        manager.delete(9)  # erasing a missing slot is a no-op
 
 
 def test_animator_advances_frames():

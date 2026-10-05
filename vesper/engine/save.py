@@ -73,3 +73,10 @@ class SaveManager:
                 return SaveData.from_json(fh.read())
         except (OSError, ValueError):
             return None
+
+    def delete(self, slot: int = 0) -> None:
+        """Erase a save file (used by the file-select screen)."""
+        try:
+            os.remove(self.path_for(slot))
+        except OSError:
+            pass

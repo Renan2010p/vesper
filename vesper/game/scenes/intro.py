@@ -27,8 +27,9 @@ PAGES = [
 
 
 class IntroScene(Scene):
-    def __init__(self, app) -> None:
+    def __init__(self, app, slot: int = 0) -> None:
         super().__init__(app)
+        self.slot = slot
         self.page = 0
         self.t = 0.0
         self.done_descent = False
@@ -61,7 +62,7 @@ class IntroScene(Scene):
 
     def _finish(self) -> None:
         self.app.audio.play("confirm")
-        self.app.switch_scene("play")
+        self.app.switch_scene("play", slot=self.slot)
 
     # ------------------------------------------------------------------
     def update(self, dt: float) -> None:
