@@ -43,8 +43,6 @@ def build_room(room_id: str, tileset) -> RoomData:
     spawn = None
     saves: List[Tuple[float, float]] = []
     pickups: List[Tuple[str, float, float]] = []
-
-    # stamp the grid
     for r, line in enumerate(amap.rows):
         for c, ch in enumerate(line):
             tile = TILE_BY_CHAR.get(ch)
@@ -59,8 +57,12 @@ def build_room(room_id: str, tileset) -> RoomData:
             floor_row = r
 
     # markers
+    ship_override = spec.get("ship")
+    if ship_override is not None:
+        ship = (ship_override[0] * TILE, ship_override[1] * TILE)
     for _ch, c0, _r, length in amap.horizontal_runs("N"):
-        ship = ((c0 + length // 2) * TILE, floor_row * TILE)
+        if ship is None:
+            ship = ((c0 + length // 2) * TILE, floor_row * TILE)
         break
     at = amap.first("@")
     if at is not None:

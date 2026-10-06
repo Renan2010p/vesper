@@ -30,12 +30,13 @@ def _col(rows: List[str], col: int, r0: int, r1: int, ch: str = "!") -> None:
         rows[r] = row[:col] + ch + row[col + 1:]
 
 
-# -- the elevator shaft (vertical; the gunship waits at the bottom) -----------
-LIFT: List[str] = _open(12, 24)
-for _r in (3, 6, 9, 12, 15, 18):
+# -- the elevator shaft: enter at the top and go down -------------------------
+LIFT: List[str] = _open(12, 26)
+for _r in (7, 10, 13, 16, 19, 22):
     _put(LIFT, _r, 1 if (_r // 3) % 2 else 7, "====")
-_put(LIFT, 21, 4, "NNNN")     # gunship
-_put(LIFT, 22, 2, "@")        # spawn
+LIFT[4] = "!" * 12            # docking floor at the top ...
+_put(LIFT, 4, 2, "  ")        # ... with a hole to drop down the shaft
+_put(LIFT, 3, 6, "@")         # spawn, under the docked gunship
 
 # -- a straight hall (links the shaft to the zig-zag) -------------------------
 HALL: List[str] = _open(26, 10)
@@ -57,12 +58,13 @@ BOSS: List[str] = _open(22, 18)
 STATION_ROOMS: Dict[str, Dict] = {
     "station_lift": {
         "label": "zone.station", "zone": "station", "grid": LIFT,
-        "exits": {"up": {"to": "station_hall", "enter": "down", "at": 8}},
+        "ship": (6, 4),
+        "exits": {"right": {"to": "station_hall", "enter": "left", "at": 23}},
     },
     "station_hall": {
         "label": "room.station_hall", "zone": "station", "grid": HALL,
         "exits": {
-            "down": {"to": "station_lift", "enter": "up", "at": 5},
+            "left": {"to": "station_lift", "enter": "right", "at": 7},
             "right": {"to": "station_zigzag", "enter": "left", "at": 7},
         },
     },

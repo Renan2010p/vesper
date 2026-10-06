@@ -10,15 +10,13 @@ class DoorSystem(System):
     """Shoot-to-open hatches.
 
     A door is solid until a projectile of a high enough tier (any beam <
-    missile < super missile) hits it.  It stays open while the player is near
-    and closes a moment after they leave.
+    missile < super missile) hits it.  Once opened it stays open for good, so
+    the corridors remain connected.
     """
 
     priority = 16
 
     def update(self, world: World, dt: float) -> None:
-        player = world.first(tag="player")
-        prect = player.get(Transform).as_rect().inflate(10, 10) if player else None
         projectiles = list(world.query(Transform, Projectile))
         for ent in world.query(Transform, Door):
             door: Door = ent.get(Door)
@@ -36,7 +34,8 @@ class DoorSystem(System):
                     if proj.tier < door.tier:
                         continue
                     door.open = True
-                    door.open_timer = 0.6
+                    if door.key:
+                        world.services.setdefault("doors_open", set()).add(door.key)
                     _sfx(world, "door")
                     particles = _particles(world)
                     if particles:
@@ -54,12 +53,6 @@ class DoorSystem(System):
 
             if door.open:
                 door.anim = min(1.0, door.anim + dt * 4.0)
-                if prect is not None and rect.colliderect(prect):
-                    door.open_timer = max(door.open_timer, 0.4)
-                else:
-                    door.open_timer -= dt
-                    if door.open_timer <= 0:
-                        door.open = False
             else:
                 door.anim = max(0.0, door.anim - dt * 4.0)
 

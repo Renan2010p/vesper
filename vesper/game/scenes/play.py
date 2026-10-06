@@ -239,12 +239,17 @@ class PlayScene(Scene):
 
     def _populate_room(self, room) -> None:
         w = self.world
-        for spec in room.doors:
+        opened = w.services.get("doors_open", set())
+        for i, spec in enumerate(room.doors):
             ent = spawn_door(w, spec["x"], spec["y"], spec["w"], spec["h"],
                              tier=spec.get("tier", 0), axis=spec.get("axis", "v"))
             door: Door = ent.get(Door)
             door.target = spec.get("target", "")
             door.enter = spec.get("enter", "")
+            door.key = f"{room.id}:{i}"
+            if door.key in opened:
+                door.open = True
+                door.anim = 1.0
             ent.tag("room")
         if room.ship:
             spawn_ship(w, room.ship[0], room.ship[1]).tag("room")
