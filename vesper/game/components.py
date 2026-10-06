@@ -156,13 +156,13 @@ class Drops:
 
 @dataclass
 class Door:
-    """A shoot-to-open hatch (the classic shutter door)."""
+    """A sensor hatch: opens on contact and closes when the player leaves."""
 
-    tier: int = 0                    # 0=any beam, 1=missile, 2=super missile
+    tier: int = 0                    # 0=any beam/contact, 1=missile, 2=super missile
     axis: str = "h"                  # "h" horizontal barrier, "v" vertical
     open: bool = False
+    open_timer: float = 0.0          # time left before it closes
     anim: float = 0.0                # 0 closed .. 1 fully open
-    key: str = ""                    # persistent identity across room reloads
     target: str = ""                 # room to load when passing through
     enter: str = ""                  # which side to appear on in the target room
 
