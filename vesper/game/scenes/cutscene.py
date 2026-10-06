@@ -176,4 +176,5 @@ class EscapeCutScene(CutsceneScene):
     def _finish(self) -> None:
         self.app.audio.stop_music()
         self.app.audio.play("upgrade")
-        self.app.switch_scene("end", win=True, stats={"station": True})
+        # the prologue ends as she breaks away and sets course for Nara
+        self.app.switch_scene("intro", slot=self.slot)

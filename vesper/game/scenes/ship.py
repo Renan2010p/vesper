@@ -18,8 +18,7 @@ class ShipScene(Scene):
         self.play = play
         self.index = 0
         self.saved = False
-        self.menu = [("save", t("ship.save")), ("depart", t("ship.depart")),
-                     ("leave", t("ship.leave"))]
+        self.menu = [("save", t("ship.save")), ("leave", t("ship.leave"))]
 
     def on_enter(self) -> None:
         player = self.play.world.first(tag="player")
@@ -59,13 +58,8 @@ class ShipScene(Scene):
             self.saved = True
             self.play.hud.add_toast(t("toast.mission_saved"),
                                    t("toast.mission_saved_sub"), "save")
-            self.menu = [("depart", t("ship.depart")), ("leave", t("ship.leave"))]
+            self.menu = [("leave", t("ship.leave"))]
             self.index = 0
-        elif action == "depart":
-            self.app.audio.play("confirm")
-            player = self.play.world.first(tag="player")
-            self.play._save_game(player)
-            self.app.switch_scene("cut_story", slot=self.play.slot)
         else:
             self._leave()
 

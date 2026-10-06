@@ -166,9 +166,9 @@ def ai_zeres(world: World, ent, dt: float) -> None:
         if world.events:
             world.events.emit("boss_phase", phase=phase)
 
-    # scripted escape: the fight turns, or Vesper is nearly down
+    # scripted escape: the fight turns, Vesper is nearly down, or it drags on
     low_player = phealth is not None and phealth.hp <= phealth.max_hp * 0.35
-    if low_player or health.hp <= health.max_hp * 0.35:
+    if low_player or health.hp <= health.max_hp * 0.35 or boss.timer > 30.0:
         boss.fleeing = True
         boss.flee_timer = 0.0
         if world.events:

@@ -84,7 +84,7 @@ class SaveSelectScene(Scene):
             return
         self.app.audio.play("confirm")
         if save is None:
-            self.app.switch_scene("intro", slot=self.index)
+            self.app.switch_scene("cut_story", slot=self.index)
         else:
             self.app.switch_scene("play", save=save, slot=self.index)
 

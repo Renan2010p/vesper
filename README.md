@@ -32,9 +32,9 @@ system to stop the machine called *the Warden*.
 - **HUD, area map, toasts, save/continue, phases and checkpoint respawn.**
 - **Three save slots** — a Super-Metroid-style file select showing area, play
   time and completion for each slot, with erase.
-- **A scripted finale** — a distress signal leads Vesper to **Zeres Station**:
-  story cutscenes, a winged boss, a self-destruct countdown and an escape
-  before the station blows.
+- **A scripted prologue** — a distress signal leads Vesper to **Zeres Station**:
+  story cutscenes, a winged boss who steals the Nara Core, a self-destruct
+  countdown and an escape — then she descends to the surface.
 - **Procedural art & audio** generated at runtime — zero third-party assets.
 - **Extremely modular engine** — ECS + content registry + pluggable scenes, with
   a **platform seam** (`vesper/engine/platform`) so the core never touches the OS.

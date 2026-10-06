@@ -81,7 +81,6 @@ _STRINGS: Dict[str, Dict[str, str]] = {
         "hud.boss": "CHEFE",
         "boss.warden": "O WARDEN",
         "boss.zeres": "ZERES",
-        "ship.depart": "PARTIR PARA ZERES",
         # zones
         "zone.surface": "SUPERFÍCIE DE NARA",
         "zone.landing": "LOCAL DE POUSO",
@@ -238,7 +237,6 @@ _STRINGS: Dict[str, Dict[str, str]] = {
         "hud.boss": "BOSS",
         "boss.warden": "THE WARDEN",
         "boss.zeres": "ZERES",
-        "ship.depart": "DEPART FOR ZERES",
         "zone.surface": "NARA SURFACE",
         "zone.landing": "LANDING SITE",
         "zone.verdant": "VERDANT HOLLOW",
