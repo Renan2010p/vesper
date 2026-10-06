@@ -66,6 +66,28 @@ def item_surface(item_id: str) -> pygame.Surface:
     return s
 
 
+def missile_icon(size: int = 16) -> pygame.Surface:
+    """A small missile/rocket glyph for the HUD counter."""
+    s = new_surface(size, size)
+
+    def px(v: float) -> int:
+        return int(round(v * size / 16.0))
+
+    body = (224, 228, 240)
+    body_dark = (120, 128, 152)
+    nose = (255, 138, 90)
+    fin = (255, 176, 96)
+    flame = (255, 214, 120)
+    pygame.draw.polygon(s, nose, [(px(8), px(1)), (px(5), px(6)), (px(11), px(6))])
+    pygame.draw.rect(s, body, (px(5), px(5), px(6), px(7)))
+    pygame.draw.rect(s, body_dark, (px(5), px(9), px(6), px(1)))
+    pygame.draw.circle(s, (90, 200, 255), (px(8), px(8)), max(1, px(1.6)))
+    pygame.draw.polygon(s, fin, [(px(5), px(9)), (px(2), px(13)), (px(5), px(13))])
+    pygame.draw.polygon(s, fin, [(px(11), px(9)), (px(14), px(13)), (px(11), px(13))])
+    pygame.draw.polygon(s, flame, [(px(6), px(12)), (px(8), px(15)), (px(10), px(12))])
+    return s
+
+
 def projectile_surface(kind: str) -> pygame.Surface:
     if kind == "beam":
         s = new_surface(10, 6)

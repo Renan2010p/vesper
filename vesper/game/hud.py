@@ -10,6 +10,7 @@ import pygame
 from vesper.engine.physics import Transform
 from vesper.engine.ui import Fonts, draw_bar, draw_text
 
+from . import art
 from .components import Boss, Health, Loadout, Player
 from .config import CORE_GOAL
 from .i18n import t
@@ -28,6 +29,7 @@ class HUD:
     def __init__(self) -> None:
         self.toasts: List[Toast] = []
         self.boss_ref = None
+        self._missile_icon = art.missile_icon(16)
 
     def add_toast(self, title: str, subtitle: str = "", kind: str = "item") -> None:
         self.toasts.append(Toast(title, subtitle, kind))
@@ -80,15 +82,16 @@ class HUD:
             draw_bar(surface, 10, 35, 150, 4, min(1.0, pcomp.charge / CHARGE_TIME),
                      (255, 236, 130))
 
-        # missiles ---------------------------------------------------------
+        # missiles (square counter with a missile icon, Super-Metroid style) --
         x = 236
         if loadout.max_missiles > 0:
-            pygame.draw.polygon(surface, (255, 170, 90),
-                                [(x, 30), (x + 9, 11), (x + 18, 30)])
-            pygame.draw.rect(surface, (40, 30, 20), (x + 5, 20, 8, 8))
-            draw_text(surface, fonts, f"x{loadout.missiles:02d}", (x + 24, 16), size=17,
-                      color=(255, 210, 150))
-            x += 94
+            box = pygame.Rect(x, 10, 22, 22)
+            pygame.draw.rect(surface, (52, 34, 24), box, border_radius=4)
+            pygame.draw.rect(surface, (255, 170, 90), box, width=2, border_radius=4)
+            surface.blit(self._missile_icon, (x + 3, 13))
+            draw_text(surface, fonts, f"x{loadout.missiles:02d}", (x + 28, 12),
+                      size=16, color=(255, 210, 150))
+            x += 98
 
         # Nara cores -------------------------------------------------------
         for i in range(CORE_GOAL):

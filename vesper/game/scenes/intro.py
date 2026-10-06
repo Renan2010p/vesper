@@ -38,7 +38,7 @@ class IntroScene(Scene):
         rng = random.Random(21)
         self.stars = [(rng.uniform(0, w), rng.uniform(0, h * 0.7),
                        rng.choice((1, 1, 2)), rng.uniform(0.0, 6.28)) for _ in range(140)]
-        self.ship = art.ship_surface()
+        self.ship = art.flying_gunship_surface()
         self.horizon = h - 54
         self.ground = vertical_gradient(w, h - self.horizon + 10, (40, 44, 58), (16, 18, 26))
 
@@ -70,6 +70,53 @@ class IntroScene(Scene):
         if self.t >= 6.0:
             self.done_descent = True
 
+    # -- ship fly-by ------------------------------------------------------
+    T_FLY = 2.4
+    T_DESC = 2.6
+
+    def _ship_pose(self):
+        """Return the gunship's (centre_x, centre_y, angle_deg) at this time."""
+        w, _h = self.app.render_size
+        sw = self.ship.get_width()
+        target_y = self.horizon - 24
+        cx = w // 2
+        if self.t < self.T_FLY:                          # fly in from the left
+            u = self.t / self.T_FLY
+            e = 1 - (1 - u) ** 2
+            x = -sw + (cx + sw) * e
+            y = 150 + math.sin(u * math.pi) * 8
+            angle = 0.0
+        elif self.t < self.T_FLY + self.T_DESC:          # curve down and flare
+            u = (self.t - self.T_FLY) / self.T_DESC
+            e = u * u
+            x = cx + math.sin(u * math.pi) * 6
+            y = 150 + (target_y - 150) * e
+            angle = -52.0 * math.sin(u * math.pi)
+        else:                                            # rest on the ground
+            x, y, angle = cx, target_y, 0.0
+        return x, y, angle
+
+    def _draw_ship(self, surface, x, y, angle) -> None:
+        glow = pygame.Surface((96, 44), pygame.SRCALPHA)
+        for r in range(32, 3, -5):
+            a = int(90 * (1 - r / 32))
+            pygame.draw.ellipse(glow, (120, 200, 255, a), (48 - r, 22 - r // 2, r * 2, r))
+        surface.blit(glow, (x - 48, y - 22))
+
+        if self.t < self.T_FLY:                           # horizontal speed lines
+            for i, dy in enumerate((-9, 0, 9)):
+                ln = 26 + i * 7
+                pygame.draw.line(surface, (120, 160, 210),
+                                 (x - 44, y + dy), (x - 44 - ln, y + dy), 2)
+        elif self.t < self.T_FLY + self.T_DESC:           # descent speed lines
+            for i, dx in enumerate((-11, 0, 11)):
+                ln = 22 + i * 7
+                pygame.draw.line(surface, (120, 160, 210),
+                                 (x + dx, y - 30), (x + dx, y - 30 - ln), 2)
+
+        img = pygame.transform.rotate(self.ship, angle)
+        surface.blit(img, img.get_rect(center=(int(x), int(y))))
+
     def draw(self, surface: pygame.Surface) -> None:
         w, h = surface.get_size()
         surface.blit(self.bg, (0, 0))
@@ -94,19 +141,9 @@ class IntroScene(Scene):
             y = self.horizon - 40 + (i * 37 + int(self.t * 900)) % 90
             pygame.draw.line(surface, (110, 130, 165), (x, y), (x - 5, y + 14), 1)
 
-        # descending ship
-        progress = min(1.0, self.t / 5.0)
-        eased = 1 - (1 - progress) ** 3
-        start_y = -60.0
-        target_y = self.horizon - self.ship.get_height() + 6
-        ship_y = start_y + (target_y - start_y) * eased
-        ship_x = w // 2 - self.ship.get_width() // 2 + math.sin(self.t * 1.5) * 6
-        glow = pygame.Surface((140, 60), pygame.SRCALPHA)
-        for r in range(60, 4, -6):
-            a = int(70 * (1 - r / 60))
-            pygame.draw.ellipse(glow, (120, 200, 255, a), (70 - r, 30 - r // 2, r * 2, r))
-        surface.blit(glow, (ship_x - 34, ship_y + self.ship.get_height() // 2))
-        surface.blit(self.ship, (ship_x, ship_y))
+        # the gunship flies in, curves down and lands (Samus-style fly-by)
+        ship_x, ship_y, angle = self._ship_pose()
+        self._draw_ship(surface, ship_x, ship_y, angle)
 
         # text panel
         title_key, line_keys = PAGES[self.page]
