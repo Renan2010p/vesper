@@ -150,7 +150,7 @@ class FlyCutScene(CutsceneScene):
 
     def _finish(self) -> None:
         self.app.audio.play("confirm")
-        self.app.switch_scene("play", room="station",
+        self.app.switch_scene("play", room="station_lift",
                               save=self.app.save.load(self.slot), slot=self.slot)
 
 

@@ -70,7 +70,7 @@ class PlayScene(Scene):
         super().__init__(app)
         self.save_data = save
         self.slot = slot
-        self.station = room == "station"
+        self.station = bool(room and room.startswith("station"))
         self.countdown = None
         self.play_time = 0.0
         self.hud = HUD()
@@ -205,6 +205,20 @@ class PlayScene(Scene):
                 tr.y = dtr.y + dtr.h - tr.h
                 placed = True
                 break
+        elif enter in ("up", "down"):
+            for ent in self.world.query(Transform, Door):
+                dtr = ent.get(Transform)
+                on_edge = (dtr.y < 2 * TILE) if enter == "up" else \
+                    (dtr.y > (tm.height - 2) * TILE)
+                if not on_edge:
+                    continue
+                tr.x = dtr.x + dtr.w / 2 - tr.w / 2
+                if enter == "up":
+                    tr.y = dtr.y + dtr.h + 2
+                else:
+                    tr.y = dtr.y - tr.h - 2
+                placed = True
+                break
         if spawn_pos is not None:
             tr.x, tr.y = spawn_pos
         elif not placed:
@@ -302,7 +316,7 @@ class PlayScene(Scene):
             elif event.key == Key.M:
                 self.app.audio.set_enabled(not self.app.audio.enabled)
 
-    def _start_countdown(self, seconds: float = 42.0) -> None:
+    def _start_countdown(self, seconds: float = 75.0) -> None:
         if self.countdown is not None:
             return
         self.countdown = seconds

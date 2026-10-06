@@ -107,24 +107,6 @@ OUTER: List[str] = [
     "#" * 28,
 ]
 
-#: Zeres Station corridor: the ship waits on the left, the signal leads right.
-STATION: List[str] = [
-    "!" * 44,
-    _side(44, "", "!"),
-    _side(44, "", "!"),
-    _side(44, " " * 6 + "======", "!"),
-    _side(44, "", "!"),
-    _side(44, " " * 14 + "======", "!"),
-    _side(44, "", "!"),
-    _side(44, " " * 22 + "======", "!"),
-    _side(44, "", "!"),
-    _side(44, " " * 30 + "========", "!"),
-    _side(44, "", "!"),
-    _side(44, "   NNNNN", "!"),
-    _side(44, "  @", "!"),
-    "!" * 44,
-]
-
 ROOMS: Dict[str, Dict] = {
     "cave": {
         "label": "room.cave",
@@ -159,14 +141,12 @@ ROOMS: Dict[str, Dict] = {
         "grid": OUTER,
         "exits": {"left": {"to": "landing", "enter": "right"}},
     },
-    "station": {
-        "label": "zone.station",
-        "zone": "station",
-        "grid": STATION,
-        "exits": {},
-        "enemies": [("zeres", 38, 8)],
-    },
 }
+
+# Zeres Station prologue rooms live in their own module.
+from .station import STATION_ROOMS  # noqa: E402
+
+ROOMS.update(STATION_ROOMS)
 
 #: the room the game starts in
 START_ROOM = "landing"

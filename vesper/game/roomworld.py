@@ -74,13 +74,22 @@ def build_room(room_id: str, tileset) -> RoomData:
     # doors from exits (carve the opening at the edge, just above the floor)
     doors: List[dict] = []
     for side, link in spec.get("exits", {}).items():
-        ex = 0 if side == "left" else width - 1
-        dy = link.get("at", floor_row - 2)
-        for yy in (dy, dy + 1):
-            tm.set(ex, yy, T_EMPTY)
-        doors.append({"x": ex * TILE, "y": dy * TILE, "w": TILE, "h": 2 * TILE,
-                      "tier": link.get("tier", 0), "axis": "v",
-                      "target": link["to"], "enter": link.get("enter", side)})
+        if side in ("left", "right"):
+            ex = 0 if side == "left" else width - 1
+            dy = link.get("at", floor_row - 2)
+            for yy in (dy, dy + 1):
+                tm.set(ex, yy, T_EMPTY)
+            doors.append({"x": ex * TILE, "y": dy * TILE, "w": TILE, "h": 2 * TILE,
+                          "tier": link.get("tier", 0), "axis": "v",
+                          "target": link["to"], "enter": link.get("enter", side)})
+        else:  # up / down
+            ey = 0 if side == "up" else height - 1
+            dx = link.get("at", width // 2)
+            for xx in (dx, dx + 1):
+                tm.set(xx, ey, T_EMPTY)
+            doors.append({"x": dx * TILE, "y": ey * TILE, "w": 2 * TILE, "h": TILE,
+                          "tier": link.get("tier", 0), "axis": "h",
+                          "target": link["to"], "enter": link.get("enter", side)})
 
     if spawn is None:
         base_x = ship[0] if ship else (width // 2) * TILE
@@ -109,28 +118,36 @@ def build_room_graph() -> Dict[str, dict]:
         amap = parse(spec["grid"], rid)
         floor_row = 0
         for r in range(amap.height):
-            row = amap.rows[r]
-            if any(ch == "#" for ch in row):
+            if any(ch in "#!" for ch in amap.rows[r]):
                 floor_row = r
         doors = {}
         for side, link in spec.get("exits", {}).items():
-            doors[side] = (link["to"], link.get("at", floor_row - 2))
+            if side in ("up", "down"):
+                at = link.get("at", amap.width // 2)
+            else:
+                at = link.get("at", floor_row - 2)
+            doors[side] = (link["to"], at)
         info[rid] = {"w": amap.width, "h": amap.height, "doors": doors,
                      "label": spec["label"]}
 
+    opposite = {"left": "right", "right": "left", "up": "down", "down": "up"}
     graph: Dict[str, dict] = {START_ROOM: {"x": 0, "y": 0, **info[START_ROOM]}}
     queue = [START_ROOM]
     while queue:
         rid = queue.pop(0)
         a = graph[rid]
-        for side, (to, dy) in info[rid]["doors"].items():
+        for side, (to, at) in info[rid]["doors"].items():
             if to in graph:
                 continue
             other = info[to]
-            opposite = "left" if side == "right" else "right"
-            b_dy = other["doors"].get(opposite, (None, other["h"] - 3))[1]
-            bx = a["x"] + a["w"] if side == "right" else a["x"] - other["w"]
-            by = a["y"] + dy - b_dy
+            fallback = other["w"] // 2 if side in ("up", "down") else other["h"] - 3
+            b_at = other["doors"].get(opposite[side], (None, fallback))[1]
+            if side in ("left", "right"):
+                bx = a["x"] + a["w"] if side == "right" else a["x"] - other["w"]
+                by = a["y"] + at - b_at
+            else:
+                by = a["y"] + a["h"] if side == "down" else a["y"] - other["h"]
+                bx = a["x"] + at - b_at
             graph[to] = {"x": bx, "y": by, **other}
             queue.append(to)
     return graph
