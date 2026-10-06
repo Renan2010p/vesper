@@ -7,11 +7,12 @@ from ._base import _particles, _sfx
 
 
 class DoorSystem(System):
-    """Sensor hatches.
+    """Sensor / shootable hatches.
 
-    The basic hatch (tier 0) opens when the player touches it and closes a
-    moment after they step away.  Armoured hatches (missile / super) still have
-    to be shot with a weapon of the matching tier.
+    A plain hatch (tier 0) opens when the player touches it or when it is shot;
+    an armoured hatch (missile / super) must be shot with the right weapon.  A
+    hatch opened by touch closes shortly after the player steps away; one opened
+    from a distance stays open until the player reaches it.
     """
 
     priority = 16
@@ -26,18 +27,19 @@ class DoorSystem(System):
             sprite: Sprite = ent.get(Sprite)
             rect = tr.as_rect()
             touching = prect is not None and rect.colliderect(prect)
+            # projectiles stop against the solid hatch, so test a small margin
+            strike = rect.inflate(10, 10)
 
             if not door.open:
                 if touching and door.tier == 0:
-                    # a plain hatch senses the player and slides open
                     self._open(world, door, rect)
+                    door.sensed = True
                 else:
-                    # armoured hatches must be shot with the right weapon
                     for proj_ent in projectiles:
                         proj: Projectile = proj_ent.get(Projectile)
                         if proj.team != "player":
                             continue
-                        if not rect.colliderect(proj_ent.get(Transform).as_rect()):
+                        if not strike.colliderect(proj_ent.get(Transform).as_rect()):
                             continue
                         if proj.tier < door.tier:
                             continue
@@ -54,11 +56,13 @@ class DoorSystem(System):
             if door.open:
                 door.anim = min(1.0, door.anim + dt * 4.0)
                 if touching:
-                    door.open_timer = max(door.open_timer, 0.5)
-                else:
+                    door.sensed = True
+                    door.open_timer = 0.5
+                elif door.sensed:
                     door.open_timer -= dt
                     if door.open_timer <= 0:
                         door.open = False
+                        door.sensed = False
             else:
                 door.anim = max(0.0, door.anim - dt * 4.0)
 

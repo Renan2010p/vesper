@@ -162,6 +162,7 @@ class Door:
     axis: str = "h"                  # "h" horizontal barrier, "v" vertical
     open: bool = False
     open_timer: float = 0.0          # time left before it closes
+    sensed: bool = False             # opened by touch (closes when you leave)
     anim: float = 0.0                # 0 closed .. 1 fully open
     target: str = ""                 # room to load when passing through
     enter: str = ""                  # which side to appear on in the target room
