@@ -92,6 +92,7 @@ class PlayScene(Scene):
             "audio": app.audio,
             "camera": app.camera,
             "particles": app.particles,
+            "hud": self.hud,
         })
         service = CollisionService()
         service.add_solids(_tile_solids)

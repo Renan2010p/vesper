@@ -97,6 +97,13 @@ def apply_damage(world: World, ent, amount: float, source: Optional[tuple] = Non
         if particles:
             tr = ent.get(Transform)
             particles.burst(tr.x + tr.w / 2, tr.y + tr.h / 2, (255, 90, 110), 10, 160)
+        # shake the world and the HUD as if her suit panel takes the hit
+        camera = world.services.get("camera")
+        if camera is not None:
+            camera.shake(7.0, 0.30)
+        hud = world.services.get("hud")
+        if hud is not None:
+            hud.shake(9.0, 0.32)
     if health.hp <= 0:
         health.hp = 0
         health.dead = True

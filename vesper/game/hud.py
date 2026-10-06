@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import random
 from dataclasses import dataclass
 from typing import List
 
@@ -30,19 +31,47 @@ class HUD:
         self.toasts: List[Toast] = []
         self.boss_ref = None
         self._missile_icon = art.missile_icon(16)
+        self._shake = 0.0
+        self._shake_time = 0.0
+        self._offset = (0, 0)
+        self._layer = None
 
     def add_toast(self, title: str, subtitle: str = "", kind: str = "item") -> None:
         self.toasts.append(Toast(title, subtitle, kind))
         if len(self.toasts) > 4:
             self.toasts.pop(0)
 
+    def shake(self, magnitude: float = 9.0, duration: float = 0.32) -> None:
+        """Jolt the whole HUD as if her suit panel absorbed a hit."""
+        self._shake = max(self._shake, magnitude)
+        self._shake_time = max(self._shake_time, duration)
+
     def update(self, dt: float) -> None:
         for toast in self.toasts:
             toast.timer -= dt
         self.toasts = [t for t in self.toasts if t.timer > 0]
 
+        if self._shake_time > 0:
+            self._shake_time -= dt
+            if self._shake_time <= 0:
+                self._shake = 0.0
+        if self._shake > 0:
+            m = int(self._shake)
+            self._offset = (random.randint(-m, m), random.randint(-m, m))
+        else:
+            self._offset = (0, 0)
+
     # -- drawing ----------------------------------------------------------
     def draw(self, surface: pygame.Surface, world, fonts: Fonts) -> None:
+        layer = self._layer
+        if layer is None or layer.get_size() != surface.get_size():
+            layer = pygame.Surface(surface.get_size(), pygame.SRCALPHA)
+            self._layer = layer
+        layer.fill((0, 0, 0, 0))
+        self._draw_hud(layer, world, fonts)
+        surface.blit(layer, self._offset)
+
+    def _draw_hud(self, surface: pygame.Surface, world, fonts: Fonts) -> None:
         player = world.first(tag="player")
         if player is not None:
             health: Health = player.get(Health)
