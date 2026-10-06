@@ -6,7 +6,7 @@ a few letters are *markers* that spawn entities (ship, hatch, spawn point...).
 
 Tiles
 -----
-``#`` wall      ``.`` / space floor      ``=`` one-way ledge
+``#`` wall      ``!`` metal wall      ``.`` / space floor      ``=`` one-way ledge
 ``^`` spikes    ``~`` lava               ``%`` breakable wall
 ``,`` moss/deco
 
@@ -24,11 +24,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, Iterator, List, Optional, Tuple
 
-from .config import (T_CRYSTAL, T_EMPTY, T_LAVA, T_MOSS, T_ONEWAY, T_SPIKE,
-                     T_SURFACE)
+from .config import (T_CRYSTAL, T_EMPTY, T_LAVA, T_METAL, T_MOSS, T_ONEWAY,
+                     T_SPIKE, T_SURFACE)
 
 TILE_BY_CHAR: Dict[str, int] = {
     "#": T_SURFACE,
+    "!": T_METAL,
     ".": T_EMPTY,
     " ": T_EMPTY,
     "=": T_ONEWAY,

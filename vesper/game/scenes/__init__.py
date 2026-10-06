@@ -4,6 +4,7 @@ from __future__ import annotations
 
 
 def register_scenes(registry) -> None:
+    from .cutscene import EscapeCutScene, FlyCutScene, StoryCutScene
     from .end import EndScene
     from .intro import IntroScene
     from .pause import PauseScene
@@ -21,3 +22,6 @@ def register_scenes(registry) -> None:
     registry.register("scene", "saves", SaveSelectScene)
     registry.register("scene", "ship", ShipScene)
     registry.register("scene", "end", EndScene)
+    registry.register("scene", "cut_story", StoryCutScene)
+    registry.register("scene", "cut_fly", FlyCutScene)
+    registry.register("scene", "cut_escape", EscapeCutScene)

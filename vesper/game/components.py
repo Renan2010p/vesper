@@ -122,6 +122,8 @@ class Boss:
     home_x: float = 0.0
     active: bool = False
     intro: float = 0.0
+    fleeing: bool = False
+    flee_timer: float = 0.0
 
 
 @dataclass
@@ -172,6 +174,8 @@ class Ship:
 
     entrance_w: float = 64.0
     entrance_h: float = 42.0
+    phase: float = 0.0
+    hover: bool = True
 
 
 @dataclass

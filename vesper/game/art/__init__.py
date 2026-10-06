@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from .black_hole import draw_black_hole
 from .doors import door_frames
-from .enemies import boss_art, crawler_art, flyer_art, jumper_art, turret_art
+from .enemies import boss_art, crawler_art, flyer_art, jumper_art, turret_art, zeres_art
 from .items import ITEM_COLORS, item_surface, missile_icon, projectile_surface
 from .player import _hunter, morph_animations, player_animations
 from .props import (SURFACE_DECOR, beacon_surface, crate_surface,
@@ -28,6 +28,7 @@ __all__ = [
     "turret_art",
     "jumper_art",
     "boss_art",
+    "zeres_art",
     "ITEM_COLORS",
     "item_surface",
     "missile_icon",

@@ -41,6 +41,7 @@ ZONE_COLORS: Dict[str, Tuple[Tuple[int, int, int], Tuple[int, int, int]]] = {
     "vault": ((12, 24, 40), (28, 52, 74)),
     "furnace": ((34, 12, 10), (70, 26, 12)),
     "aegis": ((18, 12, 34), (44, 20, 60)),
+    "station": ((8, 12, 26), (22, 32, 58)),
     "unknown": ((10, 12, 22), (22, 16, 30)),
 }
 

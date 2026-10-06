@@ -29,9 +29,9 @@ from __future__ import annotations
 from typing import Dict, List
 
 
-def _side(width: int, inner: str) -> str:
+def _side(width: int, inner: str, ch: str = "#") -> str:
     """A row of ``width`` with walls on both sides and ``inner`` in between."""
-    return "#" + inner.ljust(width - 2)[:width - 2] + "#"
+    return ch + inner.ljust(width - 2)[:width - 2] + ch
 
 
 #: Surface landing site (rainy overworld where the gunship is parked).
@@ -107,6 +107,24 @@ OUTER: List[str] = [
     "#" * 28,
 ]
 
+#: Zeres Station corridor: the ship waits on the left, the signal leads right.
+STATION: List[str] = [
+    "!" * 44,
+    _side(44, "", "!"),
+    _side(44, "", "!"),
+    _side(44, " " * 6 + "======", "!"),
+    _side(44, "", "!"),
+    _side(44, " " * 14 + "======", "!"),
+    _side(44, "", "!"),
+    _side(44, " " * 22 + "======", "!"),
+    _side(44, "", "!"),
+    _side(44, " " * 30 + "========", "!"),
+    _side(44, "", "!"),
+    _side(44, "   NNNNN", "!"),
+    _side(44, "  @", "!"),
+    "!" * 44,
+]
+
 ROOMS: Dict[str, Dict] = {
     "cave": {
         "label": "room.cave",
@@ -140,6 +158,13 @@ ROOMS: Dict[str, Dict] = {
         "zone": "surface",
         "grid": OUTER,
         "exits": {"left": {"to": "landing", "enter": "right"}},
+    },
+    "station": {
+        "label": "zone.station",
+        "zone": "station",
+        "grid": STATION,
+        "exits": {},
+        "enemies": [("zeres", 38, 8)],
     },
 }
 

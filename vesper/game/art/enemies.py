@@ -69,6 +69,42 @@ def jumper_art() -> Dict[str, Animation]:
     return {"idle": Animation([frame(False), frame(True)], fps=5.0)}
 
 
+def zeres_art() -> Dict[str, Animation]:
+    """Zeres — a winged raider that guards the station core (Ridley-like)."""
+    def frame(flap: bool, glow: bool = True):
+        w, h = 64, 44
+        s = new_surface(w, h)
+        wing = Bug
+        wing_dark = BugDark
+        wy = 3 if flap else 13
+        pygame.draw.polygon(s, wing, [(30, 22), (10, wy), (2, wy + 8), (26, 31)])
+        pygame.draw.polygon(s, wing_dark, [(30, 24), (13, wy + 5), (25, 31)])
+        pygame.draw.polygon(s, wing, [(34, 22), (54, wy), (62, wy + 8), (38, 31)])
+        pygame.draw.polygon(s, wing_dark, [(34, 24), (51, wy + 5), (39, 31)])
+        # tail
+        pygame.draw.polygon(s, MantaDark, [(44, 24), (64, 17), (64, 29), (46, 29)])
+        # body
+        pygame.draw.polygon(s, MantaDark, [(14, 20), (40, 13), (53, 24), (40, 35), (16, 31)])
+        pygame.draw.polygon(s, Manta, [(18, 21), (40, 17), (49, 24), (40, 32), (20, 29)])
+        # head + jaw
+        pygame.draw.polygon(s, Manta, [(18, 20), (4, 22), (10, 31), (20, 31)])
+        pygame.draw.polygon(s, MantaDark, [(4, 26), (18, 26), (16, 32), (4, 31)])
+        pygame.draw.polygon(s, (240, 240, 245),
+                            [(6, 26), (8, 30), (10, 26), (12, 30), (14, 26)])
+        # eye
+        pygame.draw.circle(s, (18, 10, 22), (16, 22), 4)
+        pygame.draw.circle(s, BossEye if glow else (150, 90, 40), (15, 22), 2)
+        # back spikes
+        for i in range(5):
+            x = 24 + i * 6
+            pygame.draw.polygon(s, wing_dark, [(x, 15), (x + 2, 9), (x + 4, 15)])
+        return s
+    return {
+        "idle": Animation([frame(False), frame(True)], fps=6.0),
+        "angry": Animation([frame(False), frame(True)], fps=11.0),
+    }
+
+
 def boss_art() -> Dict[str, Animation]:
     def frame(t, eye=True):
         size = 56

@@ -14,7 +14,7 @@ from vesper.engine.scene import Scene
 from vesper.engine.save import SaveData
 
 from .. import art
-from ..components import Door, Gate, Health, Loadout
+from ..components import Door, Gate, Health, Loadout, Ship
 from ..config import GRAVITY, TILE, ZONE_COLORS
 from ..hud import HUD
 from ..i18n import t
@@ -54,16 +54,24 @@ def _dynamic_solids(world: World, rect):
         door: Door = ent.get(Door)
         if door.anim < 0.5:
             out.append((ent.get(Transform).as_rect(), False))
+    # the gunship's hull is a platform you can climb on top of
+    for ent in world.query(Transform, Ship):
+        tr: Transform = ent.get(Transform)
+        out.append((pygame.Rect(int(tr.x + 8), int(tr.y + 2),
+                                int(tr.w - 16), 28), False))
     return out
 
 
 class PlayScene(Scene):
     ROOM_FADE = 0.18
 
-    def __init__(self, app, save: Optional[SaveData] = None, slot: int = 0) -> None:
+    def __init__(self, app, save: Optional[SaveData] = None, slot: int = 0,
+                 room: Optional[str] = None) -> None:
         super().__init__(app)
         self.save_data = save
         self.slot = slot
+        self.station = room == "station"
+        self.countdown = None
         self.play_time = 0.0
         self.hud = HUD()
         self._dead = False
@@ -77,9 +85,9 @@ class PlayScene(Scene):
         self.room_graph = build_room_graph()
         self.tileset = build_tileset()
         self._build()
-        self._load_room(save.spawn_zone if save and save.spawn_zone else START_ROOM,
-                        spawn_pos=(save.spawn_x, save.spawn_y) if save else None,
-                        announce=False)
+        start = room or (save.spawn_zone if save and save.spawn_zone else START_ROOM)
+        spawn_pos = None if room else ((save.spawn_x, save.spawn_y) if save else None)
+        self._load_room(start, spawn_pos=spawn_pos, announce=False)
 
     # ------------------------------------------------------------------
     # setup
@@ -142,8 +150,11 @@ class PlayScene(Scene):
             k.get("title", ""), k.get("subtitle", ""), k.get("kind", "item")))
         events.on("player_died", lambda **k: setattr(self, "_dead", True))
         events.on("boss_defeated", lambda **k: setattr(self, "_victory_timer", 3.4))
+        events.on("boss_escaped", lambda **k: self._start_countdown())
         events.on("boss_engaged", lambda **k: self.hud.add_toast(
             t("toast.boss"), t("toast.boss_sub"), "ability"))
+        if self.station:
+            self.hud.add_toast(t("station.enter"), t("station.enter_sub"), "save")
 
     # ------------------------------------------------------------------
     # rooms
@@ -282,16 +293,44 @@ class PlayScene(Scene):
             pause_keys = self.app.input.bindings.get("pause", ())
             up_keys = self.app.input.bindings.get("up", ())
             if self.world.services.get("ship_nearby") and event.key in up_keys:
-                self.app.scenes.switch("ship", play=self)
+                if self.station:
+                    self._escape()
+                else:
+                    self.app.scenes.switch("ship", play=self)
             elif event.key in pause_keys:
                 self.app.scenes.switch("pause", play=self)
             elif event.key == Key.M:
                 self.app.audio.set_enabled(not self.app.audio.enabled)
 
+    def _start_countdown(self, seconds: float = 42.0) -> None:
+        if self.countdown is not None:
+            return
+        self.countdown = seconds
+        self.world.services["countdown"] = seconds
+        self.hud.add_toast(t("station.alarm"), t("station.alarm_sub"), "ability")
+        self.app.audio.play("explode")
+
+    def _escape(self) -> None:
+        if self.countdown is None:
+            self.hud.add_toast(t("station.no_time"), t("station.no_time_sub"), "save")
+            return
+        self.app.audio.play("confirm")
+        self.app.switch_scene("cut_escape", slot=self.slot)
+
     def update(self, dt: float) -> None:
         self.play_time += dt
         self.world.update(dt)
         self.hud.update(dt)
+
+        if self.countdown is not None:
+            self.countdown -= dt
+            self.world.services["countdown"] = max(0.0, self.countdown)
+            if self.countdown <= 0:
+                self.countdown = 0.0
+                self.app.switch_scene("end", win=False,
+                                      stats={"time": self.play_time,
+                                             "kills": self._kills()})
+                return
 
         player = self.world.first(tag="player")
         if player is not None:

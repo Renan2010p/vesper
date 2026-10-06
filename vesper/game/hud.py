@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import random
 from dataclasses import dataclass
 from typing import List
@@ -12,7 +13,7 @@ from vesper.engine.physics import Transform
 from vesper.engine.ui import Fonts, draw_bar, draw_text
 
 from . import art
-from .components import Boss, Health, Loadout, Player
+from .components import Boss, Health, Loadout, Nametag, Player
 from .config import CORE_GOAL
 from .i18n import t
 
@@ -78,7 +79,10 @@ class HUD:
             loadout: Loadout = player.get(Loadout)
             self._draw_bar(surface, world, fonts, player, health, loadout)
         self._draw_boss(surface, world, fonts)
-        self._draw_toasts(surface, fonts)
+        countdown = world.services.get("countdown")
+        if countdown is not None:
+            self._draw_countdown(surface, fonts, countdown)
+        self._draw_toasts(surface, fonts, 96 if countdown is not None else 52)
 
     def _draw_bar(self, surface, world, fonts, player, health: Health,
                   loadout: Loadout) -> None:
@@ -206,12 +210,25 @@ class HUD:
         w = 300
         x = (surface.get_width() - w) // 2
         y = surface.get_height() - 34
-        draw_text(surface, fonts, t("hud.warden"), (x, y - 20), size=17,
-                  color=(255, 210, 210))
+        tag = boss_ent.get(Nametag)
+        key = f"boss.{tag.name}" if tag is not None and tag.name else "hud.boss"
+        name = t(key)
+        if name == key:
+            name = t("hud.boss")
+        draw_text(surface, fonts, name, (x, y - 20), size=17, color=(255, 210, 210))
         draw_bar(surface, x, y, w, 14, ratio, (235, 90, 110), segments=10)
 
-    def _draw_toasts(self, surface, fonts) -> None:
-        y = 52
+    def _draw_countdown(self, surface, fonts, value: float) -> None:
+        w = surface.get_width()
+        secs = max(0, int(math.ceil(value)))
+        blink = int(value * 2) % 2 == 0
+        color = (255, 90, 90) if blink else (255, 200, 120)
+        draw_text(surface, fonts, t("hud.self_destruct"), (w // 2, 50), size=16,
+                  color=(255, 150, 150), center=True, bold=True)
+        draw_text(surface, fonts, f"{secs:02d}", (w // 2, 68), size=30,
+                  color=color, center=True, bold=True)
+
+    def _draw_toasts(self, surface, fonts, y: int = 52) -> None:
         for toast in self.toasts:
             alpha = min(1.0, toast.timer / 0.6)
             color = (255, 240, 180) if toast.kind == "ability" else (200, 230, 255)

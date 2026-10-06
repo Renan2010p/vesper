@@ -10,6 +10,14 @@ class ShipSystem(System):
 
     def update(self, world: World, dt: float) -> None:
         world.services["ship_nearby"] = False
+
+        # gentle hover (visual only -- collision still uses the transform)
+        for ent in world.query(Transform, Ship, Sprite):
+            ship: Ship = ent.get(Ship)
+            if ship.hover:
+                ship.phase += dt
+                ent.get(Sprite).offset = (0.0, math.sin(ship.phase * 1.8) * 2.5)
+
         player = world.first(tag="player")
         if player is None:
             return
